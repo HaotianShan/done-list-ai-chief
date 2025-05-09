@@ -1,9 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 @layer base {
   :root {
@@ -39,7 +38,7 @@
 
     --sidebar-background: 240 10% 3.9%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 250 95% 65%; 
+    --sidebar-primary: 250 95% 65%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 0 0% 98%;
@@ -52,21 +51,21 @@
   * {
     @apply border-border;
   }
-  
+
   html {
     @apply scroll-smooth;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
   }
 
   body {
     @apply bg-background text-foreground antialiased;
   }
-  
+
   .gradient-text {
     @apply bg-clip-text text-transparent bg-hero-gradient animate-gradient bg-300 bg-center;
     background-size: 200% 200%;
   }
-  
+
   .hero-blur {
     @apply absolute w-full max-w-[800px] h-[500px] blur-[120px] opacity-20 bg-primary rounded-full -z-10;
   }
