@@ -3,23 +3,43 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { joinWaitlist } from "@/services/waitlist";
+import { Loader2 } from "lucide-react";
 
 const CTA = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      toast.success("Success! You've been added to our waitlist.", {
-        description: "We'll notify you when early access becomes available.",
+    try {
+      const result = await joinWaitlist(email);
+      
+      if (result.success) {
+        if (result.alreadyJoined) {
+          toast.success("You're already on our waitlist!", {
+            description: "We'll be in touch when early access becomes available.",
+          });
+        } else {
+          toast.success("Success! You've been added to our waitlist.", {
+            description: "Check your inbox for a confirmation email.",
+          });
+        }
+        setEmail("");
+      } else {
+        toast.error("Something went wrong", {
+          description: result.error || "Please try again later.",
+        });
+      }
+    } catch (error) {
+      toast.error("Failed to join the waitlist", {
+        description: "Please try again later.",
       });
-      setEmail("");
-    }, 1000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -54,7 +74,14 @@ const CTA = () => {
               size="lg"
               disabled={isLoading}
             >
-              {isLoading ? "Joining..." : "Join the Waitlist →"}
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Joining...
+                </>
+              ) : (
+                "Join the Waitlist →"
+              )}
             </Button>
           </form>
           

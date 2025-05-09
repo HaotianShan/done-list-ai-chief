@@ -9,6 +9,7 @@ import FAQ from "@/components/landing/FAQ";
 import CTA from "@/components/landing/CTA";
 import Footer from "@/components/landing/Footer";
 import StickyBar from "@/components/landing/StickyBar";
+import InboxDemo from "@/components/landing/InboxDemo";
 
 const Index = () => {
   return (
@@ -17,6 +18,7 @@ const Index = () => {
       <Hero />
       <Features />
       <ValueProposition />
+      <InboxDemo />
       <Testimonials />
       <FAQ />
       <CTA />
