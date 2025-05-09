@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -6,10 +7,14 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import {
   Mail,
+  Clock,
   Users,
+  Inbox,
+  FileText,
   AlertCircle,
   DollarSign,
   MessageSquare,
+  CheckCircle,
   Ban,
   Shield,
   Lock,
