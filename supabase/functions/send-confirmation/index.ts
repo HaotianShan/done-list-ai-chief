@@ -1,8 +1,10 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { Resend } from "npm:resend@2.0.0";
+import { serve } from "https://deno.land/std@0.203.0/http/server.ts";
+import { Resend } from "resend";
+import * as dotenv from "dotenv";
 
-// Initialize Resend with API key
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+dotenv.config();
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Set up CORS headers for browser requests
 const corsHeaders = {
