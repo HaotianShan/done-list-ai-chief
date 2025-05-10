@@ -27,7 +27,7 @@ const StickyBar = () => {
     <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-lg border-t border-white/10 p-4 z-50 animate-fade-in">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="text-sm sm:text-base">
-          Get early access to the AI Email Assistant
+          Get early access to the Mercury Emails
         </div>
         <Button
           className="bg-button-gradient hover:opacity-90 transition-opacity"

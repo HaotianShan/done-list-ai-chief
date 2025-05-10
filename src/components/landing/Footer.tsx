@@ -12,7 +12,7 @@ const Footer = () => {
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-sm text-muted-foreground">
-            © {currentYear} AI Email Assistant. All rights reserved.
+            © {currentYear} Mercury Emails. All rights reserved.
           </div>
 
           <div className="flex gap-6 items-center">

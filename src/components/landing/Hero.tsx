@@ -60,14 +60,14 @@ const Hero = () => {
               <span className="absolute left-0 top-0 bottom-0  w-[2.5px] bg-gradient-to-b from-blue-400/80 to-transparent" />
               <div className="flex flex-col gap-y-3 text-left">
                 <span className="text-gray-200 font-medium tracking-tight">
-                  AI Handles Your Inbox,
+                  AI Handles Your Entire Inbox,
                 </span>
                 <span className="text-white font-bold pb-1">
                   <span className="bg-gradient-to-r from-blue-400 via-blue-300 to-blue-400 bg-clip-text text-transparent">
-                    You Own
+                    You Focus
                   </span>{" "}
                   <span className="inline-block bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent leading-[1.2]">
-                    the High-Stakes
+                    on What Matters.
                   </span>
                 </span>
               </div>
@@ -111,8 +111,8 @@ const Hero = () => {
             </Button>
           </form>
           <p className="text-sm text-gray-500">
-            Trusted by executives from Fortune 500 companies. Zero spam, strict
-            confidentiality.
+            Unlock premium features for free during beta period. Limited
+            availability.
           </p>
         </div>
 
