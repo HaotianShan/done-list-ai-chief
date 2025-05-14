@@ -50,7 +50,7 @@ const CTA = () => {
         <h2 className="text-3xl md:text-5xl font-bold mb-6">
           Be among the first to experience
           <br />
-          <span className="gradient-text">Mercury Emails</span>
+          <span className="gradient-text">Mercury Flow</span>
         </h2>
 
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
