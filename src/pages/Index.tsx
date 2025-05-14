@@ -1,3 +1,4 @@
+
 import React from "react";
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
@@ -9,6 +10,8 @@ import CTA from "@/components/landing/CTA";
 import Footer from "@/components/landing/Footer";
 import StickyBar from "@/components/landing/StickyBar";
 import InboxDemo from "@/components/landing/InboxDemo";
+import AIHandleEverything from "@/components/landing/AIHandleEverything";
+import AICustomization from "@/components/landing/AICustomization";
 
 const Index = () => {
   return (
@@ -16,9 +19,10 @@ const Index = () => {
       <Header />
       <Hero />
       <InboxDemo />
+      <AIHandleEverything />
+      <AICustomization />
       <Features />
       <ValueProposition />
-
       <Testimonials />
       <FAQ />
       <CTA />
