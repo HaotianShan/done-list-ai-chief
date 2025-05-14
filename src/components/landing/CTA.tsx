@@ -24,7 +24,7 @@ const CTA = () => {
           });
         } else {
           toast.success("Success! You've been added to our waitlist.", {
-            description: "Check your inbox for a confirmation email.",
+            description: "Stay tuned for launch news, perks, and surprises!",
           });
         }
         setEmail("");

@@ -1,15 +1,12 @@
-
 import React from "react";
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
-import Features from "@/components/landing/Features";
 import ValueProposition from "@/components/landing/ValueProposition";
 import Testimonials from "@/components/landing/Testimonials";
 import FAQ from "@/components/landing/FAQ";
 import CTA from "@/components/landing/CTA";
 import Footer from "@/components/landing/Footer";
 import StickyBar from "@/components/landing/StickyBar";
-import InboxDemo from "@/components/landing/InboxDemo";
 import AIHandleEverything from "@/components/landing/AIHandleEverything";
 import AICustomization from "@/components/landing/AICustomization";
 
@@ -18,10 +15,8 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground">
       <Header />
       <Hero />
-      <InboxDemo />
       <AIHandleEverything />
       <AICustomization />
-      <Features />
       <ValueProposition />
       <Testimonials />
       <FAQ />
