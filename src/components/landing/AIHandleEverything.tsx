@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   CheckCircle,
@@ -65,6 +66,7 @@ const AIHandleEverything = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<
     "deadline" | "meeting" | "follow-up"
   >("deadline");
+  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const stages = [
     { id: 0, label: "Before AI" },
@@ -203,38 +205,74 @@ const AIHandleEverything = () => {
     },
   ];
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setCurrentStage((prev) => Math.min(prev + 1, 2));
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [currentStage]);
-
-  useEffect(() => {
+  // Function to calculate and update progress based on current stage
+  const updateProgress = useCallback(() => {
     const progressValue = (currentStage / (stages.length - 1)) * 100;
     setProgress(progressValue);
-  }, [currentStage]);
+  }, [currentStage, stages.length]);
 
+  // Effect to handle auto progression
+  const setupAutoProgression = useCallback(() => {
+    if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current);
+    }
+    
+    if (autoProgressionActive && currentStage < stages.length - 1) {
+      progressIntervalRef.current = setInterval(() => {
+        setCurrentStage(prev => {
+          if (prev >= stages.length - 1) {
+            if (progressIntervalRef.current) {
+              clearInterval(progressIntervalRef.current);
+              progressIntervalRef.current = null;
+            }
+            return prev;
+          }
+          return prev + 1;
+        });
+      }, 2500);
+    }
+    
+    // Cleanup interval when component unmounts or when autoProgressionActive changes
+    return () => {
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+        progressIntervalRef.current = null;
+      }
+    };
+  }, [autoProgressionActive, currentStage, stages.length]);
+
+  // Effect to handle stage changes and update progress
   useEffect(() => {
-    if (!autoProgressionActive) return;
+    updateProgress();
+  }, [currentStage, updateProgress]);
 
-    const timer = setInterval(() => {
-      setCurrentStage((prev) => {
-        if (prev >= stages.length - 1) {
-          clearInterval(timer);
-          return prev;
-        }
-        return prev + 1;
-      });
-    }, 2500);
+  // Effect to set up auto progression
+  useEffect(() => {
+    return setupAutoProgression();
+  }, [autoProgressionActive, currentStage, setupAutoProgression]);
 
-    return () => clearInterval(timer);
-  }, [autoProgressionActive, stages.length]);
+  // Handler for stage click
+  const handleStageClick = (stageId: number) => {
+    setCurrentStage(stageId);
+    setAutoProgressionActive(false);
+    
+    if (stageId === 2) {
+      setSelectedTemplate("deadline");
+    }
+  };
 
   return (
-    <section className="py-20 px-4">
+    <section className="py-20 px-4 border-t border-gray-800 relative overflow-hidden">
+      <div className="hero-blur opacity-10"></div>
+      
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <Mail className="h-5 w-5 text-[#6cacfc]" />
+            <Badge variant="outline" className="bg-[#6cacfc]/10 border-[#6cacfc]/30 text-[#6cacfc] px-3">
+              Automation
+            </Badge>
+          </div>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Let AI Handle Everything
           </h2>
@@ -244,33 +282,32 @@ const AIHandleEverything = () => {
           </p>
         </div>
       </div>
+      
       {/* Progress Bar */}
       <div className="relative mb-12 px-4 max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-8">
           {stages.map((stage) => (
             <button
               key={stage.id}
-              onClick={() => {
-                setCurrentStage(stage.id);
-                setAutoProgressionActive(false);
-                if (stage.id === 2) setSelectedTemplate("deadline");
-              }}
+              onClick={() => handleStageClick(stage.id)}
               className="flex flex-col items-center group relative z-10 focus:outline-none"
               aria-label={`Go to ${stage.label} stage`}
             >
               {/* Stage indicator */}
               <div className="relative mb-3">
-                <div className="absolute -inset-2 rounded-full bg-[#6cacfc]/10 opacity-0 transition-opacity group-hover:opacity-100" />
+                <div className={`absolute -inset-2 rounded-full bg-[#6cacfc]/10 transition-opacity ${
+                  currentStage === stage.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                }`} />
                 <div
-                  className={`relative flex items-center justify-center w-7 h-7 transition-all duration-300 ${
+                  className={`relative flex items-center justify-center w-10 h-10 transition-all duration-300 ${
                     currentStage >= stage.id
-                      ? "text-white bg-[#6cacfc] shadow-sm shadow-[#6cacfc]/30"
-                      : "text-gray-400 bg-gray-800 border border-gray-600/60 group-hover:border-[#6cacfc]/30"
+                      ? "text-white bg-gradient-to-r from-[#6cacfc] to-[#4a95fa] shadow-lg shadow-[#6cacfc]/20"
+                      : "text-gray-400 bg-gray-800/80 border border-gray-700/60 group-hover:border-[#6cacfc]/30"
                   } ${currentStage === stage.id ? "scale-110" : "scale-100"} rounded-full`}
                 >
                   {currentStage > stage.id ? (
                     <svg
-                      className="w-4 h-4"
+                      className="w-5 h-5"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2.5"
@@ -279,14 +316,14 @@ const AIHandleEverything = () => {
                       <path d="M5 13l4 4L19 7" />
                     </svg>
                   ) : (
-                    <span className="text-xs font-medium">{stage.id + 1}</span>
+                    <span className="text-sm font-medium">{stage.id + 1}</span>
                   )}
                 </div>
               </div>
 
               {/* Stage label */}
               <span
-                className={`text-xs font-medium tracking-wide transition-all ${
+                className={`text-sm font-medium tracking-wide transition-all ${
                   currentStage >= stage.id
                     ? "text-[#6cacfc] opacity-100 translate-y-0"
                     : "text-gray-400 opacity-90 translate-y-1 group-hover:translate-y-0 group-hover:opacity-100"
@@ -294,7 +331,7 @@ const AIHandleEverything = () => {
               >
                 {stage.label}
                 {currentStage === stage.id && (
-                  <span className="block h-px mt-0.5 bg-gradient-to-r from-[#6cacfc]/40 to-[#6cacfc]/10 transition-all" />
+                  <span className="block h-0.5 mt-1 bg-gradient-to-r from-[#6cacfc]/70 to-transparent transition-all" />
                 )}
               </span>
             </button>
@@ -302,13 +339,13 @@ const AIHandleEverything = () => {
         </div>
 
         {/* Progress track */}
-        <div className="absolute top-3.5 left-0 right-0 h-[3px] bg-gray-800/80 backdrop-blur-sm rounded-full">
+        <div className="absolute top-5 left-0 right-0 h-[2px] bg-gray-800/80 backdrop-blur-sm rounded-full">
           {/* Progress line */}
           <div
-            className="relative h-full bg-[#6cacfc] transition-all duration-500 ease-[cubic-bezier(0.83,0,0.17,1)]"
-            style={{ width: `${(currentStage / (stages.length - 1)) * 100}%` }}
+            className="relative h-full bg-gradient-to-r from-[#4a95fa] to-[#6cacfc] transition-all duration-500 ease-[cubic-bezier(0.83,0,0.17,1)]"
+            style={{ width: `${progress}%` }}
           >
-            <div className="absolute right-0 -top-[2px] w-2 h-2 bg-[#6cacfc] rounded-full shadow-[0_0_8px_#6cacfc55]" />
+            <div className="absolute right-0 -top-[3px] w-2 h-2 bg-[#6cacfc] rounded-full shadow-[0_0_8px_#6cacfc55]" />
             <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_25%,rgba(255,255,255,0.15)_50%,transparent_75%)] opacity-20 bg-[length:200%_100%] animate-shine" />
           </div>
         </div>
@@ -324,14 +361,17 @@ const AIHandleEverything = () => {
               : "opacity-100 blur-none scale-100"
           }`}
         >
-          <div className="w-full lg:w-2/3 mx-auto bg-secondary/30 p-6 rounded-xl border border-white/5">
+          <div className="w-full lg:w-2/3 mx-auto bg-black/30 p-6 rounded-xl backdrop-blur-sm border border-white/5 shadow-xl">
             <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 justify-center">
-              <Inbox className="h-5 w-5" /> Email Workflow
+              <Inbox className="h-5 w-5 text-[#6cacfc]" /> 
+              <span>Email Workflow</span>
             </h3>
 
-            <div className="overflow-hidden rounded-md border border-gray-800 bg-black/20">
-              <div className="p-3 bg-gray-800/50 border-b border-gray-800 flex items-center justify-between">
-                <h4 className="font-medium">Inbox</h4>
+            <div className="overflow-hidden rounded-md border border-gray-800 bg-black/30 backdrop-blur-sm">
+              <div className="p-3 bg-gray-800/50 border-b border-gray-700/80 flex items-center justify-between">
+                <h4 className="font-medium flex items-center gap-2">
+                  <Inbox className="h-4 w-4" /> Inbox
+                </h4>
                 {currentStage >= 1 && (
                   <Badge
                     variant="outline"
@@ -344,18 +384,20 @@ const AIHandleEverything = () => {
 
               <div className="max-h-80 overflow-y-auto">
                 {currentStage === 0 ? (
-                  <div className="p-4 text-center h-40 flex flex-col items-center justify-center">
-                    <div className="bg-gray-800/70 p-4 rounded-md w-full">
-                      <div className="mb-2 text-amber-400 font-medium flex items-center justify-center gap-2">
-                        <AlertCircle size={16} />
+                  <div className="p-6 text-center h-40 flex flex-col items-center justify-center">
+                    <div className="bg-gray-800/70 backdrop-blur-sm p-6 rounded-md w-full shadow-inner">
+                      <div className="mb-3 text-amber-400 font-medium flex items-center justify-center gap-2">
+                        <AlertCircle size={18} />
                         <span>48 unprocessed emails</span>
                       </div>
-                      <p className="text-xs text-gray-500">
-                        3 schedule conflicts
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        7 urgent responses needed
-                      </p>
+                      <div className="space-y-2 text-gray-400">
+                        <p className="text-sm flex items-center justify-center gap-1">
+                          <Clock size={14} /> 3 schedule conflicts
+                        </p>
+                        <p className="text-sm flex items-center justify-center gap-1">
+                          <AlertCircle size={14} /> 7 urgent responses needed
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ) : (
@@ -363,7 +405,7 @@ const AIHandleEverything = () => {
                     {sampleEmails.map((email) => (
                       <div
                         key={email.id}
-                        className={`p-3 cursor-pointer hover:bg-gray-800/30 ${selectedEmail?.id === email.id ? "bg-gray-800/40" : ""}`}
+                        className={`p-4 cursor-pointer transition-colors hover:bg-gray-800/30 ${selectedEmail?.id === email.id ? "bg-gray-800/40" : ""}`}
                         onClick={() => setSelectedEmail(email)}
                       >
                         <div className="flex items-center justify-between mb-1">
@@ -387,7 +429,7 @@ const AIHandleEverything = () => {
                         <div className="text-xs text-gray-400 truncate">
                           {email.preview}
                         </div>
-                        {email.id === "1" && (
+                        {email.id === "1" && currentStage >= 1 && (
                           <div className="mt-2 flex items-center gap-1">
                             <Badge
                               variant="outline"
@@ -414,57 +456,58 @@ const AIHandleEverything = () => {
               : "opacity-0 blur-sm scale-95"
           }`}
         >
-          <div className="w-full lg:w-2/3 mx-auto bg-secondary/30 p-6 rounded-xl border border-white/5">
+          <div className="w-full lg:w-2/3 mx-auto bg-black/30 p-6 rounded-xl backdrop-blur-sm border border-white/5 shadow-xl">
             <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <Mail className="h-5 w-5" /> AI Response Generator
+              <Mail className="h-5 w-5 text-[#6cacfc]" /> 
+              <span>AI Response Generator</span>
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="md:col-span-1">
-                <h4 className="text-sm font-medium mb-2">Select a Template</h4>
+                <h4 className="text-sm font-medium mb-3">Select a Template</h4>
                 <div className="space-y-2">
-                  {templates.map((template) => (
-                    <div
-                      key={template.type}
-                      onClick={() =>
-                        setSelectedTemplate(
-                          template.type as "deadline" | "meeting" | "follow-up"
-                        )
-                      }
-                      className={`p-3 cursor-pointer transition-all ${
-                        selectedTemplate === template.type
-                          ? `bg-${template.badgeColor}-500/10 border-${template.badgeColor}-500/30`
-                          : "bg-gray-800/40 border-gray-700 hover:border-gray-600"
-                      } border rounded-md`}
-                    >
-                      <div className="flex items-center gap-2">
-                        {template.icon}
-                        <span
-                          className={
-                            selectedTemplate === template.type
-                              ? "font-medium"
-                              : ""
-                          }
-                        >
-                          {template.title}
-                        </span>
+                  {templates.map((template) => {
+                    const isSelected = selectedTemplate === template.type;
+                    const bgColorClass = isSelected ? `bg-${template.badgeColor}-500/10` : "bg-gray-800/40";
+                    const borderColorClass = isSelected ? `border-${template.badgeColor}-500/30` : "border-gray-700";
+                    
+                    return (
+                      <div
+                        key={template.type}
+                        onClick={() => setSelectedTemplate(template.type)}
+                        className={`p-4 cursor-pointer transition-all ${bgColorClass} ${borderColorClass} hover:border-gray-600 border rounded-md`}
+                      >
+                        <div className="flex items-center gap-2">
+                          {template.icon}
+                          <span className={isSelected ? "font-medium" : ""}>
+                            {template.title}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
-              <div className="md:col-span-2 bg-black/20 rounded-md border border-gray-800 p-4">
+              <div className="md:col-span-2 bg-black/30 backdrop-blur-sm rounded-md border border-gray-800 p-5">
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="font-medium">AI Generated Response</h4>
-                  <Badge
-                    variant="outline"
-                    className={`bg-${templates.find((t) => t.type === selectedTemplate)?.badgeColor}-500/10 text-${templates.find((t) => t.type === selectedTemplate)?.badgeColor}-400 border-${templates.find((t) => t.type === selectedTemplate)?.badgeColor}-400/30`}
-                  >
-                    {templates.find((t) => t.type === selectedTemplate)?.title}
-                  </Badge>
+                  {templates.map(t => {
+                    if (t.type === selectedTemplate) {
+                      return (
+                        <Badge
+                          key={t.type}
+                          variant="outline"
+                          className={`bg-${t.badgeColor}-500/10 text-${t.badgeColor}-400 border-${t.badgeColor}-400/30`}
+                        >
+                          {t.title}
+                        </Badge>
+                      );
+                    }
+                    return null;
+                  })}
                 </div>
-                <Separator className="mb-3" />
+                <Separator className="mb-4" />
                 {templates.find((t) => t.type === selectedTemplate)?.content}
               </div>
             </div>

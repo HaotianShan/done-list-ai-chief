@@ -1,11 +1,13 @@
 
 import React, { useState } from "react";
-import { Inbox, User, Settings, Users, Lock, Clock, AlertTriangle, CheckCircle, MailOpen } from "lucide-react";
+import { Inbox, User, Settings, Users, Lock, Clock, AlertTriangle, CheckCircle, MailOpen, Plus, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 // Define types for our categories and emails
 type Category = {
@@ -128,6 +130,11 @@ const AICustomization = () => {
     },
   ]);
 
+  // New state for adding custom categories
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryDescription, setNewCategoryDescription] = useState("");
+  const [showNewCategoryForm, setShowNewCategoryForm] = useState(false);
+
   // Calculate the percentage of automated emails
   const automatedPercentage = Math.round((emails.filter(e => e.category === "ai-handled").length / emails.length) * 100);
   
@@ -159,10 +166,42 @@ const AICustomization = () => {
     }
   };
 
+  // Function to add a new category
+  const addNewCategory = () => {
+    if (newCategoryName.trim() === "") return;
+    
+    const newId = `custom-${Date.now()}`;
+    const newCategory: Category = {
+      id: newId,
+      name: newCategoryName,
+      icon: <User size={16} className="text-indigo-400" />,
+      description: newCategoryDescription || "Custom category for specific email filtering",
+      active: true
+    };
+    
+    setCategories([...categories, newCategory]);
+    setNewCategoryName("");
+    setNewCategoryDescription("");
+    setShowNewCategoryForm(false);
+  };
+
+  // Function to remove a category
+  const removeCategory = (id: string) => {
+    setCategories(categories.filter(cat => cat.id !== id));
+  };
+
   return (
-    <section className="py-20 px-4 border-t border-gray-800">
+    <section className="py-20 px-4 border-t border-gray-800 relative overflow-hidden">
+      <div className="hero-blur opacity-10"></div>
+      
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <Settings className="h-5 w-5 text-[#6cacfc]" />
+            <Badge variant="outline" className="bg-[#6cacfc]/10 border-[#6cacfc]/30 text-[#6cacfc] px-3">
+              Customization
+            </Badge>
+          </div>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Categories AI Leaves to You</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Maintain complete control by customizing which emails you want to handle personally.
@@ -170,9 +209,9 @@ const AICustomization = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-5 bg-secondary/30 p-6 rounded-xl border border-white/5">
+          <div className="lg:col-span-5 bg-black/30 p-6 rounded-xl backdrop-blur-sm border border-white/5 shadow-xl">
             <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <Settings className="h-5 w-5" /> Customizable Categories
+              <Settings className="h-5 w-5 text-[#6cacfc]" /> Customizable Categories
             </h3>
             
             <p className="text-sm text-gray-400 mb-4">
@@ -183,24 +222,42 @@ const AICustomization = () => {
               {categories.map(category => (
                 <div
                   key={category.id}
-                  className={`p-4 rounded-md border cursor-pointer transition-colors ${
+                  className={`p-4 rounded-md border cursor-pointer transition-all ${
                     category.active 
                       ? 'bg-blue-900/20 border-blue-500/30' 
                       : 'bg-gray-800/30 border-gray-700 hover:border-gray-600'
                   }`}
-                  onClick={() => toggleCategory(category.id)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       {category.icon}
                       <span className="font-medium">{category.name}</span>
                     </div>
-                    <div className={`w-4 h-4 rounded-full border ${
-                      category.active 
-                        ? 'bg-blue-500 border-blue-600' 
-                        : 'bg-transparent border-gray-600'
-                    }`}>
-                      {category.active && <CheckCircle className="w-4 h-4 text-white" />}
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className={`w-5 h-5 rounded-full flex items-center justify-center cursor-pointer ${
+                          category.active 
+                            ? 'bg-blue-500 border-blue-600' 
+                            : 'bg-transparent border border-gray-600'
+                        }`}
+                        onClick={() => toggleCategory(category.id)}
+                      >
+                        {category.active && <CheckCircle className="w-4 h-4 text-white" />}
+                      </div>
+                      
+                      {/* Only show remove button for custom categories */}
+                      {category.id.startsWith('custom-') && (
+                        <button 
+                          className="text-gray-400 hover:text-red-400 transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeCategory(category.id);
+                          }}
+                          aria-label="Remove category"
+                        >
+                          <X size={16} />
+                        </button>
+                      )}
                     </div>
                   </div>
                   <p className="text-xs text-gray-400 mt-1 ml-7">
@@ -210,7 +267,68 @@ const AICustomization = () => {
               ))}
             </div>
             
-            <div className="bg-black/20 p-4 rounded-md border border-gray-800">
+            {showNewCategoryForm ? (
+              <div className="bg-gray-900/50 backdrop-blur-sm rounded-md border border-gray-700 p-4 mb-6 animate-fade-in">
+                <h4 className="font-medium text-sm mb-3 flex items-center gap-2">
+                  <Plus size={14} />
+                  Add New Category
+                </h4>
+                <div className="space-y-3">
+                  <div>
+                    <label htmlFor="categoryName" className="text-xs text-gray-400 mb-1 block">
+                      Category Name
+                    </label>
+                    <Input
+                      id="categoryName"
+                      value={newCategoryName}
+                      onChange={(e) => setNewCategoryName(e.target.value)}
+                      placeholder="e.g., Client Projects"
+                      className="bg-black/30 border-gray-700"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="categoryDesc" className="text-xs text-gray-400 mb-1 block">
+                      Description (Optional)
+                    </label>
+                    <Input
+                      id="categoryDesc"
+                      value={newCategoryDescription}
+                      onChange={(e) => setNewCategoryDescription(e.target.value)}
+                      placeholder="e.g., Emails related to active client projects"
+                      className="bg-black/30 border-gray-700"
+                    />
+                  </div>
+                  <div className="flex justify-end gap-2 pt-2">
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => setShowNewCategoryForm(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button 
+                      size="sm"
+                      onClick={addNewCategory}
+                      disabled={!newCategoryName.trim()}
+                    >
+                      Add Category
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="mb-6 w-full flex items-center gap-2 border-dashed border-gray-700"
+                onClick={() => setShowNewCategoryForm(true)}
+              >
+                <Plus size={16} />
+                Add Custom Category
+              </Button>
+            )}
+            
+            <div className="bg-black/30 backdrop-blur-sm p-4 rounded-md border border-gray-800">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium">Inbox Automation</span>
                 <span className="text-sm font-medium">{automatedPercentage}%</span>
@@ -222,14 +340,14 @@ const AICustomization = () => {
             </div>
           </div>
 
-          <div className="lg:col-span-7 bg-secondary/30 p-6 rounded-xl border border-white/5">
+          <div className="lg:col-span-7 bg-black/30 p-6 rounded-xl backdrop-blur-sm border border-white/5 shadow-xl">
             <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <Inbox className="h-5 w-5" /> Filtered Inbox Preview
+              <Inbox className="h-5 w-5 text-[#6cacfc]" /> Filtered Inbox Preview
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <Card className="bg-black/20 border-gray-800">
-                <div className="p-3 bg-gray-800/50 border-b border-gray-800 flex items-center justify-between">
+              <Card className="bg-black/30 backdrop-blur-sm border-gray-800">
+                <div className="p-3 bg-gray-800/50 border-b border-gray-700/80 flex items-center justify-between">
                   <h4 className="font-medium flex items-center gap-2">
                     <User size={16} /> Your Attention Needed
                   </h4>
@@ -237,14 +355,14 @@ const AICustomization = () => {
                     {emails.filter(e => e.category !== "ai-handled").length} emails
                   </Badge>
                 </div>
-                <div className="max-h-96 overflow-y-auto">
+                <div className="max-h-80 overflow-y-auto">
                   <div className="divide-y divide-gray-800/60">
                     {emails
                       .filter(email => email.category !== "ai-handled")
                       .map((email) => (
                         <div
                           key={email.id}
-                          className="p-3 cursor-pointer hover:bg-gray-800/30"
+                          className="p-4 cursor-pointer transition-colors hover:bg-gray-800/30"
                         >
                           <div className="flex items-center justify-between mb-1">
                             <span className={`text-sm ${email.read ? 'text-gray-400' : 'font-medium'}`}>
@@ -257,7 +375,7 @@ const AICustomization = () => {
                           {email.flagReason && (
                             <div className="flex items-center gap-1">
                               <Badge variant="outline" className="bg-amber-500/10 text-amber-400 border-amber-500/30 text-xs">
-                                {categories.find(c => c.id === email.category)?.name}
+                                {categories.find(c => c.id === email.category)?.name || "Custom"}
                               </Badge>
                               <span className="text-xs text-gray-500">
                                 {email.flagReason}
@@ -270,8 +388,8 @@ const AICustomization = () => {
                 </div>
               </Card>
 
-              <Card className="bg-black/20 border-gray-800">
-                <div className="p-3 bg-gray-800/50 border-b border-gray-800 flex items-center justify-between">
+              <Card className="bg-black/30 backdrop-blur-sm border-gray-800">
+                <div className="p-3 bg-gray-800/50 border-b border-gray-700/80 flex items-center justify-between">
                   <h4 className="font-medium flex items-center gap-2">
                     <MailOpen size={16} /> AI-Handled
                   </h4>
@@ -279,14 +397,14 @@ const AICustomization = () => {
                     {emails.filter(e => e.category === "ai-handled").length} emails
                   </Badge>
                 </div>
-                <div className="max-h-96 overflow-y-auto">
+                <div className="max-h-80 overflow-y-auto">
                   <div className="divide-y divide-gray-800/60">
                     {emails
                       .filter(email => email.category === "ai-handled")
                       .map((email) => (
                         <div
                           key={email.id}
-                          className="p-3 cursor-pointer hover:bg-gray-800/30"
+                          className="p-4 cursor-pointer transition-colors hover:bg-gray-800/30"
                         >
                           <div className="flex items-center justify-between mb-1">
                             <span className={`text-sm ${email.read ? 'text-gray-400' : 'font-medium'}`}>
@@ -308,7 +426,7 @@ const AICustomization = () => {
               </Card>
             </div>
 
-            <div className="bg-black/20 rounded-md border border-gray-800 p-4">
+            <div className="bg-black/30 backdrop-blur-sm rounded-md border border-gray-800 p-4">
               <h4 className="font-medium mb-4">Role-Based Examples</h4>
               
               <Tabs defaultValue="founder" value={activePersona} onValueChange={setActivePersona}>

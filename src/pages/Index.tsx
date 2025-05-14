@@ -1,3 +1,4 @@
+
 import React from "react";
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
@@ -9,6 +10,8 @@ import Footer from "@/components/landing/Footer";
 import StickyBar from "@/components/landing/StickyBar";
 import AIHandleEverything from "@/components/landing/AIHandleEverything";
 import AICustomization from "@/components/landing/AICustomization";
+import Pricing from "@/components/landing/Pricing";
+import Security from "@/components/landing/Security";
 
 const Index = () => {
   return (
@@ -18,6 +21,8 @@ const Index = () => {
       <AIHandleEverything />
       <AICustomization />
       <ValueProposition />
+      <Pricing />
+      <Security />
       <Testimonials />
       <FAQ />
       <CTA />
