@@ -1,3 +1,4 @@
+
 import React from "react";
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
@@ -9,6 +10,9 @@ import StickyBar from "@/components/landing/StickyBar";
 import AICustomization from "@/components/landing/AICustomization";
 import Pricing from "@/components/landing/Pricing";
 import Security from "@/components/landing/Security";
+import AIHandleEverything from "@/components/landing/AIHandleEverything";
+import InteractiveDemo from "@/components/landing/InteractiveDemo";
+import CategoriesAILeavesToYou from "@/components/landing/CategoriesAILeavesToYou";
 
 const Index = () => {
   return (
@@ -16,6 +20,9 @@ const Index = () => {
       <Header />
       <Hero />
       <AICustomization />
+      <AIHandleEverything />
+      <InteractiveDemo />
+      <CategoriesAILeavesToYou />
       <Pricing />
       <Security />
       {/* <Testimonials /> */}
