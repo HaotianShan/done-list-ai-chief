@@ -1,10 +1,19 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
-import { FileText, Upload, RefreshCcw, Lightbulb, Pin, Send, Paperclip, X, CheckCircle } from "lucide-react";
+import {
+  FileText,
+  Upload,
+  RefreshCcw,
+  Lightbulb,
+  Pin,
+  Send,
+  Paperclip,
+  X,
+  CheckCircle,
+} from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 const InteractiveDemo = () => {
@@ -24,19 +33,25 @@ const InteractiveDemo = () => {
   const companyData = {
     "E-Commerce Store": {
       docs: ["returns.pdf", "shipping.pdf", "product_guide.pdf"],
-      greeting: "Hi! I'm your support bot. Ask about returns, shipping, or products!",
-      context: "You are a helpful customer support assistant for an e-commerce store. You have access to return policies, shipping information, and product guides."
+      greeting:
+        "Hi! I'm your support bot. Ask about returns, shipping, or products!",
+      context:
+        "You are a helpful customer support assistant for an e-commerce store. You have access to return policies, shipping information, and product guides.",
     },
     "SaaS Startup": {
       docs: ["user_manual.pdf", "api_docs.pdf", "billing.pdf"],
-      greeting: "Hello! I can help with account setup, billing, or technical questions.",
-      context: "You are a technical support assistant for a SaaS platform. You help with user accounts, billing questions, and API documentation."
+      greeting:
+        "Hello! I can help with account setup, billing, or technical questions.",
+      context:
+        "You are a technical support assistant for a SaaS platform. You help with user accounts, billing questions, and API documentation.",
     },
     "Travel Agency": {
       docs: ["booking_terms.pdf", "cancellation.pdf", "destinations.pdf"],
-      greeting: "Welcome! I can assist with bookings, cancellations, and travel info.",
-      context: "You are a travel consultant assistant. You help with booking procedures, cancellation policies, and destination information."
-    }
+      greeting:
+        "Welcome! I can assist with bookings, cancellations, and travel info.",
+      context:
+        "You are a travel consultant assistant. You help with booking procedures, cancellation policies, and destination information.",
+    },
   };
 
   const currentData = companyData[selectedCompany];
@@ -46,8 +61,8 @@ const InteractiveDemo = () => {
       {
         type: "bot",
         content: currentData.greeting,
-        timestamp: Date.now()
-      }
+        timestamp: Date.now(),
+      },
     ]);
   }, [selectedCompany]);
 
@@ -59,9 +74,9 @@ const InteractiveDemo = () => {
     setSelectedCompany(company);
     setIsAnalyzing(true);
     setProgress(0);
-    
+
     const interval = setInterval(() => {
-      setProgress(prev => {
+      setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
           setIsAnalyzing(false);
@@ -72,22 +87,22 @@ const InteractiveDemo = () => {
     }, 200);
   };
 
-  const handleFileUpload = (event) => {
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files);
     if (files.length === 0) return;
 
     setIsUploading(true);
-    
+
     // Simulate file processing
     setTimeout(() => {
-      const newFiles = files.map(file => ({
+      const newFiles = files.map((file) => ({
         name: file.name,
         size: file.size,
         type: file.type,
-        id: Date.now() + Math.random()
+        id: Date.now() + Math.random(),
       }));
-      
-      setUploadedFiles(prev => [...prev, ...newFiles]);
+
+      setUploadedFiles((prev) => [...prev, ...newFiles]);
       setIsUploading(false);
       toast({
         title: "Files uploaded successfully",
@@ -97,42 +112,42 @@ const InteractiveDemo = () => {
   };
 
   const removeFile = (fileId) => {
-    setUploadedFiles(prev => prev.filter(file => file.id !== fileId));
+    setUploadedFiles((prev) => prev.filter((file) => file.id !== fileId));
   };
 
   const callLLM = async (message, context) => {
     try {
-      const response = await fetch('https://api.suanli.cn/v1/chat/completions', {
-        method: 'POST',
+      const response = await fetch("https://api.deepseek.com", {
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_QWEN3_API_KEY}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${import.meta.env.DEEPSEEK_API_KEY}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: 'free:Qwen3-30B-A3B',
+          model: "deepseek-chat",
           messages: [
             {
-              role: 'system',
-              content: `${context} Available documents: ${currentData.docs.join(', ')}. Tone: ${tone}. Respond helpfully and reference relevant documents when appropriate.`
+              role: "system",
+              content: `${context} Available documents: ${currentData.docs.join(", ")}. Tone: ${tone}. Respond helpfully and reference relevant documents when appropriate.`,
             },
             {
-              role: 'user',
-              content: message
-            }
+              role: "user",
+              content: message,
+            },
           ],
           temperature: 0.7,
-          max_tokens: 500
+          max_tokens: 500,
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get AI response');
+        throw new Error("Failed to get AI response");
       }
 
       const data = await response.json();
       return data.choices[0].message.content;
     } catch (error) {
-      console.error('LLM API Error:', error);
+      console.error("LLM API Error:", error);
       return "I'm having trouble connecting right now. Please try again in a moment.";
     }
   };
@@ -143,36 +158,38 @@ const InteractiveDemo = () => {
     const userMessage = {
       type: "user",
       content: userInput,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
-    
-    setMessages(prev => [...prev, userMessage]);
+
+    setMessages((prev) => [...prev, userMessage]);
     setUserInput("");
     setIsTyping(true);
 
     // Simulate document highlighting
-    const randomDoc = currentData.docs[Math.floor(Math.random() * currentData.docs.length)];
+    const randomDoc =
+      currentData.docs[Math.floor(Math.random() * currentData.docs.length)];
     setHighlightedDoc(randomDoc);
 
     try {
       const aiResponse = await callLLM(userInput, currentData.context);
-      
+
       const botMessage = {
         type: "bot",
         content: aiResponse,
         source: randomDoc,
         confidence: Math.floor(Math.random() * 20) + 80, // 80-99%
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
-      
-      setMessages(prev => [...prev, botMessage]);
+
+      setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
       const errorMessage = {
         type: "bot",
-        content: "I apologize, but I'm experiencing technical difficulties. Please try again.",
-        timestamp: Date.now()
+        content:
+          "I apologize, but I'm experiencing technical difficulties. Please try again.",
+        timestamp: Date.now(),
       };
-      setMessages(prev => [...prev, errorMessage]);
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsTyping(false);
       setTimeout(() => setHighlightedDoc(null), 3000);
@@ -180,7 +197,7 @@ const InteractiveDemo = () => {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
@@ -191,8 +208,8 @@ const InteractiveDemo = () => {
       {
         type: "bot",
         content: currentData.greeting,
-        timestamp: Date.now()
-      }
+        timestamp: Date.now(),
+      },
     ]);
     setHighlightedDoc(null);
     setIsTyping(false);
@@ -202,14 +219,15 @@ const InteractiveDemo = () => {
   return (
     <section className="py-20 px-4 bg-background relative overflow-hidden">
       <div className="absolute inset-0 hero-blur top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-      
+
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Experience Your AI Assistant in Action
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            See how our AI instantly understands your business context and provides accurate, on-brand responses
+            See how our AI instantly understands your business context and
+            provides accurate, on-brand responses
           </p>
         </div>
 
@@ -218,7 +236,7 @@ const InteractiveDemo = () => {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-              <select 
+              <select
                 value={selectedCompany}
                 onChange={(e) => handleCompanyChange(e.target.value)}
                 className="bg-background/80 backdrop-blur border border-white/30 rounded-lg px-4 py-2 text-sm font-medium shadow-sm"
@@ -228,10 +246,10 @@ const InteractiveDemo = () => {
                 <option value="Travel Agency">✈️ Travel Agency</option>
               </select>
             </div>
-            
-            <Button 
-              variant="outline" 
-              size="sm" 
+
+            <Button
+              variant="outline"
+              size="sm"
               className="border-primary/30 hover:bg-primary/10 shadow-sm"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
@@ -249,9 +267,9 @@ const InteractiveDemo = () => {
             />
           </div>
 
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={resetDemo}
             className="text-muted-foreground hover:text-primary"
           >
@@ -268,12 +286,14 @@ const InteractiveDemo = () => {
                 <FileText className="w-5 h-5 text-primary" />
                 Knowledge Base
               </h3>
-              
+
               {isAnalyzing ? (
                 <div className="mb-6">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-                    <span className="text-sm text-muted-foreground">Analyzing knowledge base...</span>
+                    <span className="text-sm text-muted-foreground">
+                      Analyzing knowledge base...
+                    </span>
                   </div>
                   <Progress value={progress} className="h-2" />
                 </div>
@@ -281,21 +301,25 @@ const InteractiveDemo = () => {
                 <div className="mb-6">
                   <div className="flex items-center gap-2 mb-2">
                     <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span className="text-sm text-green-400 font-medium">Ready to assist!</span>
+                    <span className="text-sm text-green-400 font-medium">
+                      Ready to assist!
+                    </span>
                   </div>
                 </div>
               )}
 
               {/* Default Documents */}
               <div className="space-y-2 mb-6">
-                <h4 className="text-sm font-medium text-muted-foreground">Default Documents</h4>
+                <h4 className="text-sm font-medium text-muted-foreground">
+                  Default Documents
+                </h4>
                 {currentData.docs.map((doc, index) => (
-                  <div 
+                  <div
                     key={doc}
                     className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-300 ${
-                      highlightedDoc === doc 
-                        ? 'bg-primary/20 border border-primary/50 shadow-md' 
-                        : 'bg-muted/40 hover:bg-muted/60'
+                      highlightedDoc === doc
+                        ? "bg-primary/20 border border-primary/50 shadow-md"
+                        : "bg-muted/40 hover:bg-muted/60"
                     }`}
                   >
                     <FileText className="w-4 h-4 text-muted-foreground flex-shrink-0" />
@@ -310,13 +334,22 @@ const InteractiveDemo = () => {
               {/* Uploaded Files */}
               {uploadedFiles.length > 0 && (
                 <div className="space-y-2 mb-6">
-                  <h4 className="text-sm font-medium text-muted-foreground">Your Documents</h4>
+                  <h4 className="text-sm font-medium text-muted-foreground">
+                    Your Documents
+                  </h4>
                   {uploadedFiles.map((file) => (
-                    <div key={file.id} className="flex items-center gap-3 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                    <div
+                      key={file.id}
+                      className="flex items-center gap-3 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg"
+                    >
                       <Paperclip className="w-4 h-4 text-blue-400 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <span className="text-sm font-medium text-blue-300 truncate block">{file.name}</span>
-                        <span className="text-xs text-muted-foreground">{(file.size / 1024).toFixed(1)} KB</span>
+                        <span className="text-sm font-medium text-blue-300 truncate block">
+                          {file.name}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {(file.size / 1024).toFixed(1)} KB
+                        </span>
                       </div>
                       <Button
                         variant="ghost"
@@ -335,21 +368,23 @@ const InteractiveDemo = () => {
               <div className="border-t border-white/10 pt-4">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-medium">Response Tone</span>
-                  <Lightbulb className={`w-4 h-4 ${tone === 'friendly' ? 'text-yellow-400' : 'text-blue-400'}`} />
+                  <Lightbulb
+                    className={`w-4 h-4 ${tone === "friendly" ? "text-yellow-400" : "text-blue-400"}`}
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <Button
-                    variant={tone === 'professional' ? 'default' : 'outline'}
+                    variant={tone === "professional" ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setTone('professional')}
+                    onClick={() => setTone("professional")}
                     className="text-xs h-8"
                   >
                     Professional
                   </Button>
                   <Button
-                    variant={tone === 'friendly' ? 'default' : 'outline'}
+                    variant={tone === "friendly" ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setTone('friendly')}
+                    onClick={() => setTone("friendly")}
                     className="text-xs h-8"
                   >
                     Friendly
@@ -372,7 +407,9 @@ const InteractiveDemo = () => {
                     <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-background"></div>
                   </div>
                   <div>
-                    <h4 className="font-medium">{selectedCompany} AI Assistant</h4>
+                    <h4 className="font-medium">
+                      {selectedCompany} AI Assistant
+                    </h4>
                     <p className="text-xs text-green-400 flex items-center gap-1">
                       <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                       Online • Ready to help
@@ -384,13 +421,20 @@ const InteractiveDemo = () => {
               {/* Chat Messages */}
               <div className="h-80 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-background/50 to-background/30">
                 {messages.map((message, index) => (
-                  <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[80%] p-4 rounded-2xl shadow-sm ${
-                      message.type === 'user' 
-                        ? 'bg-gradient-to-r from-primary to-primary/90 text-primary-foreground ml-4' 
-                        : 'bg-card/80 backdrop-blur border border-white/20 mr-4'
-                    }`}>
-                      <p className="text-sm leading-relaxed">{message.content}</p>
+                  <div
+                    key={index}
+                    className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}
+                  >
+                    <div
+                      className={`max-w-[80%] p-4 rounded-2xl shadow-sm ${
+                        message.type === "user"
+                          ? "bg-gradient-to-r from-primary to-primary/90 text-primary-foreground ml-4"
+                          : "bg-card/80 backdrop-blur border border-white/20 mr-4"
+                      }`}
+                    >
+                      <p className="text-sm leading-relaxed">
+                        {message.content}
+                      </p>
                       {message.source && (
                         <div className="mt-3 pt-2 border-t border-white/20">
                           <div className="flex items-center gap-2 text-xs">
@@ -404,14 +448,20 @@ const InteractiveDemo = () => {
                     </div>
                   </div>
                 ))}
-                
+
                 {isTyping && (
                   <div className="flex justify-start">
                     <div className="bg-card/80 backdrop-blur border border-white/20 p-4 rounded-2xl mr-4 shadow-sm">
                       <div className="flex space-x-1">
                         <div className="w-2 h-2 bg-primary rounded-full animate-bounce" />
-                        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-                        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                        <div
+                          className="w-2 h-2 bg-primary rounded-full animate-bounce"
+                          style={{ animationDelay: "0.1s" }}
+                        />
+                        <div
+                          className="w-2 h-2 bg-primary rounded-full animate-bounce"
+                          style={{ animationDelay: "0.2s" }}
+                        />
                       </div>
                     </div>
                   </div>

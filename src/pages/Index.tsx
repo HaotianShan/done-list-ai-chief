@@ -1,4 +1,3 @@
-
 import React from "react";
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
@@ -14,24 +13,22 @@ import AIHandleEverything from "@/components/landing/AIHandleEverything";
 import InteractiveDemo from "@/components/landing/InteractiveDemo";
 import CategoriesAILeavesToYou from "@/components/landing/CategoriesAILeavesToYou";
 
-const Index = () => {
-  return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Header />
-      <Hero />
-      <AICustomization />
-      <AIHandleEverything />
-      <InteractiveDemo />
-      <CategoriesAILeavesToYou />
-      <Pricing />
-      <Security />
-      {/* <Testimonials /> */}
-      <FAQ />
-      <CTA />
-      <Footer />
-      <StickyBar />
-    </div>
-  );
-};
+const Index = () => (
+  <div className="min-h-screen bg-background text-foreground">
+    <Header />
+    <Hero />
+    <AICustomization />
+    <AIHandleEverything />
+    <InteractiveDemo />
+    <CategoriesAILeavesToYou />
+    <Pricing />
+    <Security />
+    {/* <Testimonials /> */}
+    <FAQ />
+    <CTA />
+    <Footer />
+    <StickyBar />
+  </div>
+);
 
 export default Index;

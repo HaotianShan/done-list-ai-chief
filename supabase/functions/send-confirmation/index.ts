@@ -48,9 +48,9 @@ serve(async (req) => {
 
     // Send email
     const { data, error } = await resend.emails.send({
-      from: "Mercury Flow <onboarding@resend.dev>",
+      from: "Viro AI <onboarding@resend.dev>",
       to: [email],
-      subject: "Welcome to the Mercury Flow Waitlist!",
+      subject: "Welcome to the Viro AI Waitlist!",
       html: `...your email template...`,
     });
 

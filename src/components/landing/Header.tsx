@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
+import { Sparkles } from "lucide-react";
 
 const Header = () => {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 py-4 px-4 bg-background/80 backdrop-blur-lg border-b border-white/10">
+    <header className="fixed top-0 left-0 right-0 z-50 py-3 px-4 bg-background/80 backdrop-blur-lg border-b border-white/10">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="flex items-center">
-          <span className="font-bold text-xl">Mercury Flow </span>
+          <span className="ml-2 font-bold text-xl">Viro AI </span>
         </div>
 
         <nav className="hidden md:flex items-center space-x-8">
@@ -31,13 +32,14 @@ const Header = () => {
 
         <Button
           variant="outline"
-          className="border-primary/30 text-primary hover:bg-primary/10 hover:text-primary hover:border-primary/50"
+          className="flex items-center space-x-2 px-4 py-2 rounded-full border bg-[#201c1c] border-[#201c1c] text-gray-400 hover:bg-[#282424] hover:text-gray-40"
           onClick={() => {
             const element = document.getElementById("waitlist");
             element?.scrollIntoView({ behavior: "smooth" });
           }}
         >
-          Join Waitlist
+          <Sparkles className="w-4 h-4" />
+          <span>Join Waitlist</span>
         </Button>
       </div>
     </header>
