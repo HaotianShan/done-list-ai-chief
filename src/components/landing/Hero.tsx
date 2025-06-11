@@ -18,6 +18,7 @@ import {
   Legend,
   Filler,
 } from "chart.js";
+import LiveViewComponent from "../LiveUserGlobe";
 
 // Register ChartJS components
 ChartJS.register(
@@ -151,11 +152,12 @@ const Hero: React.FC = () => {
               <span className="absolute left-0 top-0 bottom-0  w-[2.5px] bg-gradient-to-b from-blue-400/80 to-transparent" />
               <div className="flex flex-col gap-y-3 text-left">
                 <span className="text-gray-200 font-medium tracking-tight">
-                  AI That Handles Your
+                  Smarter Video Ads.
                 </span>
                 <span className="text-white font-bold pb-1">
                   <span className="bg-gradient-to-r from-blue-400 via-blue-300 to-blue-400 bg-clip-text text-transparent">
-                    Entire Inbox
+                    {" "}
+                    Higher Conversions.
                   </span>
                 </span>
               </div>
@@ -165,8 +167,8 @@ const Hero: React.FC = () => {
 
         {/* Subtext */}
         <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed">
-          Let AI Agents Automate Email Follow-Ups, Prioritize Tasks, and
-          Visualize Deadlines—So You Focus on What Truly Moves the Needle.
+          Grow Your Brand & Social Media with Production-Ready Video Ads.
+          Powered by Agentic AI.
         </p>
         {/* Waitlist Form */}
         <div className="relative max-w-2xl mx-auto">
@@ -198,10 +200,6 @@ const Hero: React.FC = () => {
               )}
             </Button>
           </form>
-          <p className="text-sm text-gray-500">
-            Unlock premium features for free during beta period. Limited
-            availability.
-          </p>
         </div>
 
         {/* Mac Browser Mockup */}
@@ -248,6 +246,8 @@ const Hero: React.FC = () => {
             </div>
           </div>
         </div>
+
+        <LiveViewComponent />
 
         {/* Compliance Badges */}
         <div className="flex justify-center gap-8 pt-16">
