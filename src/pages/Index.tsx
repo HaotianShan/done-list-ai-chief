@@ -6,24 +6,18 @@ import FAQ from "@/components/landing/FAQ";
 import CTA from "@/components/landing/CTA";
 import Footer from "@/components/landing/Footer";
 import StickyBar from "@/components/landing/StickyBar";
-import AICustomization from "@/components/landing/AICustomization";
 import Pricing from "@/components/landing/Pricing";
-import Security from "@/components/landing/Security";
-import AIHandleEverything from "@/components/landing/AIHandleEverything";
-import InteractiveDemo from "@/components/landing/InteractiveDemo";
-import CategoriesAILeavesToYou from "@/components/landing/CategoriesAILeavesToYou";
+import LiveViewComponent from "@/components/landing/LiveUserGlobe";
+import VideoSection from "@/components/landing/VideoDemo";
 
 const Index = () => (
   <div className="min-h-screen bg-background text-foreground">
     <Header />
     <Hero />
-    <AICustomization />
-    <AIHandleEverything />
-    <InteractiveDemo />
-    <CategoriesAILeavesToYou />
+    <VideoSection />
+    {/* <LiveViewComponent /> */}
+
     <Pricing />
-    <Security />
-    {/* <Testimonials /> */}
     <FAQ />
     <CTA />
     <Footer />

@@ -364,7 +364,8 @@ const LiveUserGlobe = () => {
     markerGroup.userData = { location };
     const { size, lat, lng, color } = location;
 
-    const position = latLngToVector3(lat, lng, 172);
+    //height
+    const position = latLngToVector3(lat, lng, 171.9);
     markerGroup.position.copy(position);
 
     // Create a glowing dot
