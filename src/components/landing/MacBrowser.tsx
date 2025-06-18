@@ -27,59 +27,51 @@ const timePeriodData = {
   "1D": {
     labels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
     impressions: [
-      142, 98, 76, 68, 85, 210, 580, 1250, 1980, 2450, 3120, 3850, 4200, 3950,
-      3700, 3450, 4120, 5320, 6150, 5870, 4620, 3210, 1850, 980,
+      250, 180, 150, 140, 170, 350, 850, 1800, 2800, 3500, 4500, 5500, 6000, 5800,
+      5400, 5000, 6000, 7800, 8800, 8500, 6800, 4800, 2800, 1500
     ],
     clicks: [
-      8, 5, 4, 3, 6, 24, 85, 210, 345, 420, 580, 720, 795, 760, 690, 620, 780,
-      980, 1240, 1150, 860, 590, 320, 145,
+      18, 12, 10, 8, 15, 45, 150, 350, 550, 680, 880, 1080, 1180, 1120, 1020, 920, 1150,
+      1450, 1800, 1650, 1250, 850, 480, 220
     ],
     engagements: [
-      3, 2, 1, 1, 2, 8, 28, 70, 115, 140, 195, 240, 265, 255, 230, 205, 260,
-      325, 415, 385, 285, 195, 105, 48,
+      8, 5, 4, 3, 6, 18, 55, 120, 190, 235, 300, 360, 400, 380, 340, 300, 380,
+      480, 600, 550, 400, 270, 140, 65
     ],
     viewRate: Array.from(
       { length: 24 },
-      (_, i) => (4.2 + Math.sin(i / 3) * 0.8).toFixed(1) + "%"
+      (_, i) => (6.5 + Math.sin(i / 3) * 1.2).toFixed(1) + "%"
     ),
     ctr: Array.from(
       { length: 24 },
-      (_, i) => (1.8 + Math.cos(i / 4) * 0.5).toFixed(1) + "%"
+      (_, i) => (3.2 + Math.cos(i / 4) * 0.7).toFixed(1) + "%"
     ),
   },
   "1W": {
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    impressions: [18500, 19200, 20100, 19800, 18900, 12400, 9800],
-    clicks: [740, 790, 845, 830, 775, 495, 385],
-    engagements: [295, 315, 340, 330, 310, 195, 150],
-    completionRate: ["78%", "79%", "81%", "80%", "78%", "72%", "70%"],
-    dropOffRate: ["22%", "21%", "19%", "20%", "22%", "28%", "30%"],
+    impressions: [28000, 29000, 31000, 30500, 29500, 20000, 16000],
+    clicks: [1200, 1250, 1350, 1300, 1250, 850, 650],
+    engagements: [500, 520, 560, 540, 520, 350, 270],
+    completionRate: ["85%", "86%", "88%", "87%", "85%", "80%", "78%"],
+    dropOffRate: ["15%", "14%", "12%", "13%", "15%", "20%", "22%"],
   },
   "1M": {
     labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
-    impressions: [68200, 73500, 81500, 89200],
-    clicks: [2720, 2940, 3260, 3570],
-    engagements: [1088, 1176, 1304, 1428],
-    avgViewDuration: ["0:42", "0:45", "0:47", "0:49"],
-    conversionRate: ["2.1%", "2.3%", "2.4%", "2.6%"],
+    impressions: [105000, 115000, 125000, 140000],
+    clicks: [4500, 5000, 5500, 6300],
+    engagements: [1800, 2000, 2200, 2520],
+    avgViewDuration: ["0:55", "1:02", "1:08", "1:15"],
+    conversionRate: ["3.2%", "3.5%", "3.8%", "4.2%"],
   },
   "3M": {
     labels: ["Month 1", "Month 2", "Month 3"],
-    impressions: [245000, 312000, 285000],
-    clicks: [9800, 12480, 11400],
-    engagements: [3920, 4992, 4560],
-    cpa: [24.5, 22.8, 25.3],
-    roas: [3.2, 3.8, 3.5],
+    impressions: [420000, 520000, 600000],
+    clicks: [18000, 23000, 28000],
+    engagements: [7200, 9200, 11200],
+    cpa: [18.5, 16.8, 14.3],
+    roas: [4.8, 5.9, 7.2],
   },
-  "1Y": {
-    labels: ["Q1", "Q2", "Q3", "Q4"],
-    impressions: [865000, 792000, 823000, 1280000],
-    clicks: [34600, 31680, 32920, 51200],
-    engagements: [13840, 12672, 13168, 20480],
-    videoCompletion: ["75%", "72%", "74%", "82%"],
-    audienceRetention: ["62%", "60%", "61%", "68%"],
-  },
-};
+}
 
 const randomizeData = [
   3, 7, 1, 4, 9, 0, 5, 2, 8, 6, 4, 1, 7, 3, 9, 2, 5, 0, 8, 6, 2, 9, 4, 7, 1, 5,
@@ -178,9 +170,9 @@ const AnimatedCounter = ({
 };
 
 const MacBrowser = () => {
-  const [activePeriod, setActivePeriod] = useState<
-    "1D" | "1W" | "1M" | "3M" | "1Y"
-  >("1D");
+  const [activePeriod, setActivePeriod] = useState<"1D" | "1W" | "1M" | "3M">(
+    "1D"
+  );
   const currentData = timePeriodData[activePeriod];
 
   const totalImpressions = currentData.impressions.reduce((a, b) => a + b, 0);
@@ -361,7 +353,7 @@ const MacBrowser = () => {
               dashboard.theviroai.com
             </div>
             <div className="ml-4 flex space-x-2">
-              {(["1D", "1W", "1M", "3M", "1Y"] as const).map((period) => (
+              {(["1D", "1W", "1M", "3M"] as const).map((period) => (
                 <button
                   key={period}
                   onClick={() => setActivePeriod(period)}

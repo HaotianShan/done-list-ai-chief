@@ -132,7 +132,7 @@ const CTA = () => {
                     className="w-8 h-8 rounded-full border-2 border-background object-cover"
                   />
                 </div>
-                <span>Join 1,200+ professionals</span>
+                <span>Join 200+ professionals</span>
               </div>
             </div>
           </form>

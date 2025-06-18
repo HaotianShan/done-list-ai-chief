@@ -7,20 +7,19 @@ const pricingPlans = [
   {
     name: "Starter",
     description: "Perfect for individuals getting started",
-    price: "$49",
+    price: "$O",
     billing: "per month",
     features: ["3 videos per month", "720p resolution", "AI Agents included"],
     exclusions: ["Add Logo/Branding", "Edit Specific Scenes", "Analytics"],
     highlight: false,
-    cta: "Start Free Trial",
   },
   {
     name: "Creator",
     description: "For content creators needing more volume",
-    price: "$149",
+    price: "$29",
     billing: "per month",
     features: [
-      "10 videos per month",
+      "19 videos per month",
       "1080p resolution",
       "Add Logo/Branding",
       "No watermark",
@@ -28,15 +27,14 @@ const pricingPlans = [
     ],
     exclusions: ["Edit Specific Scenes", "Priority Support"],
     highlight: false,
-    cta: "Start Free Trial",
   },
   {
     name: "Growth",
     description: "For businesses scaling social presence",
-    price: "$399",
+    price: "$59",
     billing: "per month",
     features: [
-      "30 videos per month",
+      "39 videos per month",
       "Full Branding Kit",
       "Edit Specific Scenes",
       "No watermark",
@@ -44,7 +42,6 @@ const pricingPlans = [
       "Basic analytics",
     ],
     highlight: true,
-    cta: "Start Free Trial",
     badge: "Most Popular",
   },
   {
@@ -60,7 +57,6 @@ const pricingPlans = [
       "Dedicated Account Manager",
     ],
     highlight: false,
-    cta: "Contact Sales",
   },
 ];
 
@@ -194,17 +190,6 @@ const Pricing = () => {
                     </>
                   )}
                 </div>
-
-                <Button
-                  className={`w-full mt-auto ${
-                    plan.highlight
-                      ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                      : "border-gray-700"
-                  }`}
-                  variant={plan.highlight ? "default" : "outline"}
-                >
-                  {plan.cta}
-                </Button>
               </div>
             </Card>
           ))}
