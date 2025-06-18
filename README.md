@@ -1,73 +1,87 @@
-# Welcome to your Lovable project
+# Viro AI
 
-## Project info
+**High-Converting Video Ads for Business: Powered by Agentic AI**
 
-**URL**: https://lovable.dev/projects/8f67708a-2136-45e9-9cd4-233f4b6fb677
+---
 
-## How can I edit this code?
+## Overview
 
-There are several ways of editing your application.
+Viro AI is a modern web application designed to help businesses grow their brand and social media presence with production-ready, high-converting video ads. The platform leverages agentic AI to automate and optimize video ad creation, providing users with a seamless, interactive experience.
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/8f67708a-2136-45e9-9cd4-233f4b6fb677) and start prompting.
+## Features
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Landing Page:** Engaging hero section, feature highlights, pricing, FAQ, and call-to-action.
+- **Waitlist Integration:** Users can join a waitlist, with emails stored in a Supabase database and confirmation emails sent automatically.
+- **Agentic AI:** (To Do) Automated video ad generation and optimization.
+- **Modern UI:** Built with a comprehensive set of reusable UI components (buttons, forms, dialogs, charts, etc.) using Tailwind CSS and shadcn/ui.
+- **Responsive Design:** Fully responsive and visually appealing across devices.
+- **Analytics & Tracking:** Google Analytics and Contentsquare integration for user behavior tracking.
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Tech Stack
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- **Frontend:** React 18, TypeScript, Vite, React Router
+- **UI:** Tailwind CSS, shadcn/ui, Radix UI, Framer Motion
+- **State/Data:** React Query, Zod, React Hook Form
+- **Backend/DB:** Supabase (auth, database, edge functions)
+- **Visualization:** Chart.js, Globe.gl, Recharts
+- **Other:** OpenAI API, dotenv, various utility libraries
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Getting Started
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Prerequisites
 
-# Step 3: Install the necessary dependencies.
-npm i
+- Node.js (18+ recommended)
+- pnpm, npm, or yarn
+- Supabase account (for backend services)
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### Installation
+
+```bash
+# Install dependencies
+npm install
+```
+
+### Development
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The app will be available at [http://localhost:8080](http://localhost:8080).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Build
 
-**Use GitHub Codespaces**
+```bash
+npm run build
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Lint
 
-## What technologies are used for this project?
+```bash
+npm run lint
+```
 
-This project is built with:
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Deployment
 
-## How can I deploy this project?
+- The app is ready to be deployed on any static hosting service (Vercel, Netlify, etc.).
+- Ensure your environment variables are set in your deployment environment.
 
-Simply open [Lovable](https://lovable.dev/projects/8f67708a-2136-45e9-9cd4-233f4b6fb677) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## License
 
-Yes, you can!
+CC-BY-NC-4.0
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Credits
+
+- Built with [Vite](https://vitejs.dev/), [React](https://react.dev/), [Tailwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/), and [Supabase](https://supabase.com/).
