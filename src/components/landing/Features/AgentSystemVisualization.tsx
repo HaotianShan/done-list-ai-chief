@@ -1,155 +1,340 @@
-
-import React, { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Zap, Target, Brain, TrendingUp } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  FiDatabase,
+  FiZap,
+  FiFilm,
+  FiEdit3,
+  FiVideo,
+  FiArrowRight,
+  FiPlay,
+  FiArrowDown,
+} from "react-icons/fi";
+import { useState, useEffect, useRef } from "react";
+import { useInView } from "react-intersection-observer";
 
 const AgentSystemVisualization = () => {
-  const [activeStep, setActiveStep] = useState(0);
-  const isMobile = useIsMobile();
+  const [animationStep, setAnimationStep] = useState(0);
+  const [typedText, setTypedText] = useState("");
+  const [showVideoVisualizations, setShowVideoVisualizations] = useState(false);
+  const animationRef = useRef<number | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [animationStarted, setAnimationStarted] = useState(false);
 
-  const steps = [
+  const { ref: sectionRef, inView } = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+  });
+
+  const productDescription =
+    "Sleek, water-resistant backpack with ergonomic straps and multiple compartments. Made from durable recycled materials.";
+
+  const agents = [
     {
       id: 1,
-      title: "AI Content Analysis",
-      description: "Our AI analyzes your brand, audience, and objectives to understand your unique needs",
-      icon: Brain,
-      color: "bg-blue-500",
-      details: ["Brand voice analysis", "Audience profiling", "Goal optimization"]
+      name: "Brainstormer",
+      icon: FiZap,
+      description: "Generates creative concepts and ad ideas",
     },
     {
       id: 2,
-      title: "Smart Script Generation",
-      description: "Generates compelling scripts tailored to your brand voice and target audience",
-      icon: Zap,
-      color: "bg-green-500",
-      details: ["Persuasive copywriting", "Brand consistency", "A/B test variants"]
+      name: "Director",
+      icon: FiFilm,
+      description: "Structures visual narrative and shot sequence",
     },
     {
       id: 3,
-      title: "Visual Optimization",
-      description: "Creates stunning visuals that align with your brand and capture attention",
-      icon: Target,
-      color: "bg-purple-500",
-      details: ["Brand-aligned design", "Attention optimization", "Visual storytelling"]
+      name: "Scriptwriter",
+      icon: FiEdit3,
+      description: "Crafts detailed movements and interactions",
     },
     {
       id: 4,
-      title: "Performance Tracking",
-      description: "Monitors performance and automatically optimizes for better results",
-      icon: TrendingUp,
-      color: "bg-orange-500",
-      details: ["Real-time analytics", "Auto-optimization", "ROI tracking"]
-    }
+      name: "Videographer",
+      icon: FiVideo,
+      description: "Shots the final video",
+    },
   ];
 
+  const resetAnimation = () => {
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  };
+
+  const startAnimation = () => {
+    resetAnimation();
+
+    setAnimationStep(1);
+
+    timeoutRef.current = setTimeout(() => {
+      setAnimationStep(2);
+      let currentIndex = 0;
+      const typeInterval = setInterval(() => {
+        if (currentIndex <= productDescription.length) {
+          setTypedText(productDescription.substring(0, currentIndex));
+          currentIndex++;
+        } else {
+          clearInterval(typeInterval);
+          setAnimationStep(3);
+          timeoutRef.current = setTimeout(() => {
+            setAnimationStep(4);
+            timeoutRef.current = setTimeout(() => {
+              const highlightAgents = (agentIndex: number) => {
+                if (agentIndex < agents.length) {
+                  setAnimationStep(5 + agentIndex);
+                  timeoutRef.current = setTimeout(() => {
+                    highlightAgents(agentIndex + 1);
+                  }, 1000);
+                } else {
+                  setAnimationStep(9);
+                  timeoutRef.current = setTimeout(() => {
+                    setAnimationStep(10);
+                    timeoutRef.current = setTimeout(() => {
+                      setAnimationStep(11);
+                      setShowVideoVisualizations(true);
+                    }, 1000);
+                  }, 1000);
+                }
+              };
+              highlightAgents(0);
+            }, 1000);
+          }, 1000);
+        }
+      }, 30);
+    }, 1500);
+  };
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveStep((prev) => (prev + 1) % steps.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+    if (inView && !animationStarted) {
+      startAnimation();
+      setAnimationStarted(true);
+    }
+  }, [inView, animationStarted]);
 
   return (
-    <section id="features" className="py-12 sm:py-16 md:py-24 px-4 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-8 sm:mb-12 md:mb-16">
-          <Badge variant="secondary" className="mb-3 sm:mb-4 text-xs sm:text-sm">
-            How it works
-          </Badge>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 md:mb-6">
-            AI Agents Working
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent block sm:inline sm:ml-3">
-              For You
+    <section
+      id="features"
+      ref={sectionRef}
+      className="py-20 px-4 relative overflow-hidden bg-[rgba(0,0,0)]"
+    >
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-16">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <FiZap className="h-5 w-5 text-cyan-400" />
+            <span className="bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 px-3 py-1 rounded-full text-sm">
+              Process
+            </span>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            How it{" "}
+            <span className="bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
+              Works
             </span>
           </h2>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
-            Our intelligent system combines multiple AI agents to create, optimize, 
-            and manage your video advertising campaigns automatically.
+          <p className="text-gray-400 max-w-3xl mx-auto text-lg">
+            Describe your product. Our AI handles the rest—thinking, planning,
+            filming, and even arguing over the perfect background music! You
+            just sit back and enjoy the magic.
           </p>
         </div>
 
-        <div className={`grid gap-4 sm:gap-6 lg:gap-8 ${
-          isMobile 
-            ? "grid-cols-1 sm:grid-cols-2" 
-            : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
-        }`}>
-          {steps.map((step, index) => {
-            const Icon = step.icon;
-            const isActive = index === activeStep;
-            
-            return (
-              <Card
-                key={step.id}
-                className={`group cursor-pointer transition-all duration-500 hover:shadow-lg border-2 ${
-                  isActive 
-                    ? "border-primary shadow-lg scale-105 bg-white dark:bg-slate-800" 
-                    : "border-gray-200 dark:border-gray-700 hover:border-gray-300"
-                }`}
-                onClick={() => setActiveStep(index)}
-              >
-                <CardContent className="p-4 sm:p-6">
-                  <div className="flex flex-col items-center text-center space-y-3 sm:space-y-4">
-                    <div
-                      className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center ${step.color} transition-all duration-300 ${
-                        isActive ? "scale-110 shadow-lg" : "group-hover:scale-105"
-                      }`}
-                    >
-                      <Icon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <h3 className="text-sm sm:text-base md:text-lg font-semibold">
-                        {step.title}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                        {step.description}
-                      </p>
-                    </div>
+        {/* Horizontal Layout for Product Details and AI Agents */}
+        <div className="flex flex-col md:flex-row items-stretch gap-8 mb-16">
+          {/* Product Details - Left Side */}
+          <div
+            className={`w-full md:w-2/5 bg-[#121212] rounded-xl p-6 border transition-all duration-500 ${
+              animationStep === 1
+                ? "border-cyan-500 shadow-lg shadow-cyan-500/20"
+                : "border-gray-800"
+            }`}
+          >
+            <div className="flex items-center mb-6">
+              <div className="w-10 h-10 rounded-lg bg-[#1a1a1a] flex items-center justify-center mr-4 border border-gray-800">
+                <FiDatabase className="text-cyan-400 text-xl" />
+              </div>
+              <h2 className="text-xl font-medium text-white">
+                Product Details
+              </h2>
+            </div>
 
-                    {isActive && (
-                      <div className="w-full pt-3 border-t border-gray-200 dark:border-gray-700 animate-fade-in">
-                        <ul className="space-y-1.5">
-                          {step.details.map((detail, idx) => (
-                            <li key={idx} className="text-xs text-gray-600 dark:text-gray-400 flex items-center justify-center">
-                              <span className="w-1.5 h-1.5 bg-primary rounded-full mr-2 flex-shrink-0"></span>
-                              {detail}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
+            <div className="space-y-4">
+              <div>
+                <div className="text-sm text-gray-500 mb-2">Product Name</div>
+                <div className="bg-[#1a1a1a] rounded-lg p-4 text-white border border-gray-800">
+                  UltraLight Backpack
+                </div>
+              </div>
+              <div>
+                <div className="text-sm text-gray-500 mb-2">Description</div>
+                <div className="bg-[#1a1a1a] rounded-lg p-4 text-gray-300 min-h-32 border border-gray-800">
+                  {typedText}
+                  {animationStep === 2 && (
+                    <span className="ml-1 inline-block w-2 h-5 bg-cyan-400 animate-pulse"></span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Arrow Connector */}
+          <div className="hidden md:flex items-center justify-center text-gray-600 mx-4">
+            <div className="relative h-full flex items-center">
+              <div className="absolute top-1/2 left-0 w-12 h-0.5 bg-gray-700"></div>
+              <div
+                className={`z-10 bg-[#0a0a0a] p-2 rounded-full border transition-all duration-500 ${
+                  animationStep === 3
+                    ? "border-cyan-500 text-cyan-500 shadow-lg shadow-cyan-500/10"
+                    : "border-gray-800"
+                }`}
+              >
+                <FiArrowRight className="text-2xl" />
+              </div>
+              <div className="absolute top-1/2 right-0 w-12 h-0.5 bg-gray-700"></div>
+            </div>
+          </div>
+
+          {/* AI Agents - Right Side */}
+          <div
+            className={`w-full md:w-3/5 bg-[#121212] rounded-xl p-6 border transition-all duration-500 ${
+              animationStep >= 4 && animationStep < 9
+                ? "border-cyan-500 shadow-lg shadow-cyan-500/20"
+                : "border-gray-800"
+            }`}
+          >
+            <div className="flex items-center mb-6">
+              <div className="w-10 h-10 rounded-lg bg-[#1a1a1a] flex items-center justify-center mr-4 border border-gray-800">
+                <FiZap className="text-cyan-400 text-xl" />
+              </div>
+              <h2 className="text-xl font-medium text-white">AI Agents</h2>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {agents.map((agent) => (
+                <div
+                  key={agent.id}
+                  className={`bg-[#1a1a1a] border rounded-lg p-5 transition-all duration-500 ${
+                    animationStep >= 5 + agent.id - 1 && animationStep < 9
+                      ? "border-cyan-500 shadow-lg shadow-cyan-500/10"
+                      : "border-gray-800"
+                  }`}
+                >
+                  <div className="flex items-center mb-3">
+                    <div className="w-10 h-10 rounded-lg bg-[#0a0a0a] flex items-center justify-center mr-3 border border-gray-800">
+                      <agent.icon className="text-cyan-400 text-lg" />
+                    </div>
+                    <h3 className="font-medium text-white">{agent.name}</h3>
                   </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+                  <p className="text-gray-400 text-sm">{agent.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="mt-8 sm:mt-12 md:mt-16 text-center">
-          <div className="flex justify-center space-x-2 mb-6">
-            {steps.map((_, index) => (
-              <button
-                key={index}
-                className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
-                  index === activeStep 
-                    ? "bg-primary scale-125" 
-                    : "bg-gray-300 dark:bg-gray-600 hover:bg-gray-400"
+        {/* Video Output Section */}
+        <div className="flex flex-col items-center py-2 px-4 max-w-6xl mx-auto">
+          {/* Down Arrow */}
+          <div className="flex justify-center text-gray-600 mb-8">
+            <div className="relative">
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-0.5 h-8 bg-gradient-to-b from-gray-700 to-transparent"></div>
+              <div
+                className={`relative z-10 bg-[#0a0a0a] p-3 rounded-full border-2 transition-all duration-500 ${
+                  animationStep >= 10
+                    ? "border-cyan-500 text-cyan-500 shadow-lg shadow-cyan-500/20"
+                    : "border-gray-800"
                 }`}
-                onClick={() => setActiveStep(index)}
-              />
-            ))}
+              >
+                <FiArrowDown className="text-xl" />
+              </div>
+            </div>
           </div>
-          
-          <div className="bg-white dark:bg-slate-800 rounded-xl p-4 sm:p-6 md:p-8 shadow-lg border max-w-2xl mx-auto">
-            <h4 className="text-base sm:text-lg md:text-xl font-semibold mb-2 sm:mb-3">
-              Why Choose AI Agents?
-            </h4>
-            <p className="text-xs sm:text-sm md:text-base text-muted-foreground">
-              Traditional advertising requires constant manual optimization. Our AI agents work 24/7, 
-              continuously learning and improving your campaigns while you focus on growing your business.
+
+          <div className="text-center">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+              Final Video Output
+            </h3>
+            <p className="text-gray-400 max-w-2xl mx-auto text-sm md:text-base">
+              See the results generated by our AI agent collaboration system
             </p>
+          </div>
+
+          <div className="w-full mx-auto">
+            <div className="mb-16">
+              <div className="flex items-center justify-center"></div>
+              <div className="relative w-full max-w-2xl mx-auto">
+                <div className="relative grid grid-cols-3 grid-rows-3 gap-6 aspect-square">
+                  <div className="col-start-2 row-start-2 flex items-center justify-center">
+                    <div
+                      className={`transition-all duration-700 transform ${
+                        showVideoVisualizations
+                          ? "opacity-100 scale-100 rotate-0"
+                          : "opacity-0 scale-75 rotate-12"
+                      }`}
+                    >
+                      <div className="relative w-36 h-24 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border-2 border-cyan-500/50 rounded-xl overflow-hidden shadow-xl shadow-cyan-500/10">
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <FiPlay className="text-white text-2xl" />
+                        </div>
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-2 text-center text-xs font-medium text-white">
+                          Final Video.mp4
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {[0, 1, 2, 3].map((i) => {
+                    const positions = [
+                      { row: 1, col: 2 }, // Top
+                      { row: 2, col: 1 }, // Left
+                      { row: 2, col: 3 }, // Right
+                      { row: 3, col: 2 }, // Bottom
+                    ];
+
+                    const { row, col } = positions[i];
+
+                    return (
+                      <div
+                        key={i}
+                        className={`col-start-${col} row-start-${row} flex items-center justify-center transition-all duration-700 ${
+                          showVideoVisualizations
+                            ? "opacity-100 scale-100"
+                            : "opacity-0 scale-50"
+                        }`}
+                        style={{ transitionDelay: `${i * 100}ms` }}
+                      >
+                        <div className="relative w-24 h-16 bg-gradient-to-b from-[#0f172a] to-[#111827] border border-gray-700 rounded-lg overflow-hidden shadow-lg">
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <FiVideo className="text-cyan-400 text-base" />
+                          </div>
+
+                          <div className="absolute bottom-0 left-0 right-0 p-1 text-center text-[10px] text-gray-300 font-medium">
+                            clip-{i + 1}.mp4
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {/* Connecting lines */}
+                  {showVideoVisualizations && (
+                    <>
+                      {/* Top */}
+                      <div className="absolute top-1/4 left-1/2 w-0.5 h-1/4 bg-gradient-to-b from-cyan-500/30 to-transparent transform -translate-x-1/2"></div>
+                      {/* Left */}
+                      <div className="absolute top-1/2 left-1/4 w-1/4 h-0.5 bg-gradient-to-r from-cyan-500/30 to-transparent transform -translate-y-1/2"></div>
+                      {/* Right */}
+                      <div className="absolute top-1/2 left-1/2 w-1/4 h-0.5 bg-gradient-to-l from-cyan-500/30 to-transparent transform -translate-y-1/2"></div>
+                      {/* Bottom */}
+                      <div className="absolute top-1/2 left-1/2 w-0.5 h-1/4 bg-gradient-to-t from-cyan-500/30 to-transparent transform -translate-x-1/2"></div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
