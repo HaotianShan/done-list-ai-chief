@@ -1,3 +1,4 @@
+
 import React from "react";
 
 import {
@@ -31,7 +32,7 @@ const Hero: React.FC = () => {
 
   return (
     <section
-      className="relative min-h-screen flex flex-col justify-center items-center px-4 py-24 overflow-hidden"
+      className="relative min-h-screen flex flex-col justify-center items-center px-4 py-20 md:py-24 overflow-hidden"
       style={{
         backgroundColor: "#0f172a",
         backgroundImage: `
@@ -43,23 +44,23 @@ const Hero: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto text-center z-10 animate-fade-in">
         {/* Badge */}
-        <div className="mb-6 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-blue-600/30 to-indigo-600/30 px-5 py-2.5 border border-blue-500/30 backdrop-blur-sm">
-          <span className="text-sm font-medium tracking-wide bg-gradient-to-r from-blue-300 to-indigo-300 bg-clip-text text-transparent">
+        <div className="mb-4 md:mb-6 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-blue-600/30 to-indigo-600/30 px-4 md:px-5 py-2 md:py-2.5 border border-blue-500/30 backdrop-blur-sm">
+          <span className="text-xs md:text-sm font-medium tracking-wide bg-gradient-to-r from-blue-300 to-indigo-300 bg-clip-text text-transparent">
             Coming Soon — Join the Waitlist
           </span>
         </div>
+        
         {/* Headline */}
-        <div className="max-w-4xl mx-auto mb-10">
-          <h1 className="text-4xl md:text-[3.75rem] font-semibold text-white leading-tight md:leading-[1.1]">
-            <div className="relative pl-6 md:pl-10">
-              <span className="absolute left-0 top-0 bottom-0  w-[2.5px] bg-gradient-to-b from-blue-400/80 to-transparent" />
-              <div className="flex flex-col gap-y-3 text-left">
+        <div className="max-w-4xl mx-auto mb-6 md:mb-10">
+          <h1 className="text-3xl sm:text-4xl md:text-[3.75rem] font-semibold text-white leading-tight md:leading-[1.1]">
+            <div className="relative pl-4 md:pl-6 lg:pl-10">
+              <span className="absolute left-0 top-0 bottom-0 w-[2px] md:w-[2.5px] bg-gradient-to-b from-blue-400/80 to-transparent" />
+              <div className="flex flex-col gap-y-2 md:gap-y-3 text-left">
                 <span className="text-gray-200 font-medium tracking-tight">
                   Smarter Video Ads,
                 </span>
                 <span className="text-white font-bold pb-1">
                   <span className="bg-gradient-to-r from-blue-400 via-blue-300 to-blue-400 bg-clip-text text-transparent">
-                    {" "}
                     Higher Conversions.
                   </span>
                 </span>
@@ -69,14 +70,13 @@ const Hero: React.FC = () => {
         </div>
 
         {/* Subtext */}
-        <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-2 leading-relaxed">
+        <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-2 leading-relaxed px-4">
           Grow Your Brand & Social Media with Production-Ready Video Ads.
           Powered by Agentic AI.
         </p>
       </div>
 
-      <div className="mt-10 w-full max-w-[60rem] mx-auto px-4">
-        {" "}
+      <div className="mt-6 md:mt-10 w-full max-w-[90rem] mx-auto px-2 md:px-4">
         <MacBrowser />
       </div>
     </section>

@@ -1,3 +1,4 @@
+
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -70,10 +71,10 @@ const Pricing = () => {
   return (
     <section
       id="pricing"
-      className="py-20 px-4 relative overflow-hidden bg-[rgba(0,0,0)]"
+      className="py-12 md:py-20 px-4 relative overflow-hidden bg-[rgba(0,0,0)]"
     >
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
+        <div className="text-center mb-12 md:mb-16">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Sparkles className="h-5 w-5 text-purple-400" />
             <Badge
@@ -83,16 +84,16 @@ const Pricing = () => {
               Pricing
             </Badge>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 px-4">
             Simple Pricing for{" "}
             <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
               Every Business
             </span>
           </h2>
 
-          <div className="mb-12 text-center">
-            <div className="bg-transparent rounded-lg max-w-3xl mx-auto">
-              <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+          <div className="mb-8 md:mb-12 text-center">
+            <div className="bg-transparent rounded-lg max-w-3xl mx-auto px-4">
+              <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6">
                 <div className="flex items-center gap-3 text-sm">
                   <div className="bg-green-500/20 p-1.5 rounded-full">
                     <Check className="h-4 w-4 text-green-400" />
@@ -117,7 +118,8 @@ const Pricing = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Mobile: Stack cards vertically, Desktop: Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {pricingPlans.map((plan, index) => (
             <Card
               key={index}
@@ -129,34 +131,34 @@ const Pricing = () => {
             >
               {plan.badge && (
                 <div className="absolute top-0 right-0">
-                  <Badge className="m-3 bg-purple-500 hover:bg-purple-600">
+                  <Badge className="m-3 bg-purple-500 hover:bg-purple-600 text-xs">
                     {plan.badge}
                   </Badge>
                 </div>
               )}
 
-              <div className="p-5 flex flex-col flex-grow">
+              <div className="p-4 md:p-5 flex flex-col flex-grow">
                 <div className="flex items-center gap-3 mb-4">
                   {plan.name === "Starter" && (
-                    <Sparkles size={24} className="text-purple-400" />
+                    <Sparkles size={20} className="text-purple-400 flex-shrink-0" />
                   )}
                   {plan.name === "Creator" && (
-                    <Video size={24} className="text-blue-400" />
+                    <Video size={20} className="text-blue-400 flex-shrink-0" />
                   )}
                   {plan.name === "Growth" && (
-                    <BarChart2 size={24} className="text-green-400" />
+                    <BarChart2 size={20} className="text-green-400 flex-shrink-0" />
                   )}
                   {plan.name === "Scale" && (
-                    <Rocket size={24} className="text-orange-400" />
+                    <Rocket size={20} className="text-orange-400 flex-shrink-0" />
                   )}
-                  <h3 className="text-xl font-bold">{plan.name}</h3>
+                  <h3 className="text-lg md:text-xl font-bold">{plan.name}</h3>
                 </div>
 
-                <p className="text-gray-400 text-sm mb-5">{plan.description}</p>
+                <p className="text-gray-400 text-sm mb-4 md:mb-5">{plan.description}</p>
 
-                <div className="mb-5">
+                <div className="mb-4 md:mb-5">
                   <div className="flex items-baseline">
-                    <span className="text-3xl font-bold">{plan.price}</span>
+                    <span className="text-2xl md:text-3xl font-bold">{plan.price}</span>
                     {plan.billing && (
                       <span className="text-gray-400 text-sm ml-1">
                         {plan.billing}
@@ -165,13 +167,13 @@ const Pricing = () => {
                   </div>
                 </div>
 
-                <div className="flex-grow mb-5 space-y-3">
-                  <h4 className="font-medium text-gray-300">Includes:</h4>
+                <div className="flex-grow mb-4 md:mb-5 space-y-3">
+                  <h4 className="font-medium text-gray-300 text-sm">Includes:</h4>
                   <ul className="space-y-2">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <Check
-                          size={18}
+                          size={16}
                           className="text-green-400 mt-0.5 shrink-0"
                         />
                         <span className="text-sm text-gray-300">{feature}</span>
@@ -181,7 +183,7 @@ const Pricing = () => {
 
                   {plan.exclusions && plan.exclusions.length > 0 && (
                     <>
-                      <h4 className="font-medium text-gray-300 mt-4">
+                      <h4 className="font-medium text-gray-300 mt-4 text-sm">
                         Not included:
                       </h4>
                       <ul className="space-y-2">
