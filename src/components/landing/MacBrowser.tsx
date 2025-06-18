@@ -27,16 +27,16 @@ const timePeriodData = {
   "1D": {
     labels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
     impressions: [
-      250, 180, 150, 140, 170, 350, 850, 1800, 2800, 3500, 4500, 5500, 6000, 5800,
-      5400, 5000, 6000, 7800, 8800, 8500, 6800, 4800, 2800, 1500
+      250, 180, 150, 140, 170, 350, 850, 1800, 2800, 3500, 4500, 5500, 6000,
+      5800, 5400, 5000, 6000, 7800, 8800, 8500, 6800, 4800, 2800, 1500,
     ],
     clicks: [
-      18, 12, 10, 8, 15, 45, 150, 350, 550, 680, 880, 1080, 1180, 1120, 1020, 920, 1150,
-      1450, 1800, 1650, 1250, 850, 480, 220
+      18, 12, 10, 8, 15, 45, 150, 350, 550, 680, 880, 1080, 1180, 1120, 1020,
+      920, 1150, 1450, 1800, 1650, 1250, 850, 480, 220,
     ],
     engagements: [
       8, 5, 4, 3, 6, 18, 55, 120, 190, 235, 300, 360, 400, 380, 340, 300, 380,
-      480, 600, 550, 400, 270, 140, 65
+      480, 600, 550, 400, 270, 140, 65,
     ],
     viewRate: Array.from(
       { length: 24 },
@@ -49,29 +49,21 @@ const timePeriodData = {
   },
   "1W": {
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    impressions: [28000, 29000, 31000, 30500, 29500, 20000, 16000],
-    clicks: [1200, 1250, 1350, 1300, 1250, 850, 650],
-    engagements: [500, 520, 560, 540, 520, 350, 270],
-    completionRate: ["85%", "86%", "88%", "87%", "85%", "80%", "78%"],
-    dropOffRate: ["15%", "14%", "12%", "13%", "15%", "20%", "22%"],
+    impressions: [18000, 22000, 19000, 18500, 32000, 42500, 43000],
+    clicks: [1200, 1250, 1350, 1300, 1400, 1250, 1350],
+    engagements: [500, 520, 560, 540, 580, 520, 560],
+    completionRate: ["85%", "86%", "88%", "87%", "89%", "87%", "88%"],
+    dropOffRate: ["15%", "14%", "12%", "13%", "11%", "13%", "12%"],
   },
   "1M": {
     labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
-    impressions: [105000, 115000, 125000, 140000],
+    impressions: [85000, 115000, 125000, 170000],
     clicks: [4500, 5000, 5500, 6300],
     engagements: [1800, 2000, 2200, 2520],
     avgViewDuration: ["0:55", "1:02", "1:08", "1:15"],
     conversionRate: ["3.2%", "3.5%", "3.8%", "4.2%"],
   },
-  "3M": {
-    labels: ["Month 1", "Month 2", "Month 3"],
-    impressions: [420000, 520000, 600000],
-    clicks: [18000, 23000, 28000],
-    engagements: [7200, 9200, 11200],
-    cpa: [18.5, 16.8, 14.3],
-    roas: [4.8, 5.9, 7.2],
-  },
-}
+};
 
 const randomizeData = [
   3, 7, 1, 4, 9, 0, 5, 2, 8, 6, 4, 1, 7, 3, 9, 2, 5, 0, 8, 6, 2, 9, 4, 7, 1, 5,
@@ -170,9 +162,7 @@ const AnimatedCounter = ({
 };
 
 const MacBrowser = () => {
-  const [activePeriod, setActivePeriod] = useState<"1D" | "1W" | "1M" | "3M">(
-    "1D"
-  );
+  const [activePeriod, setActivePeriod] = useState<"1D" | "1W" | "1M">("1D");
   const currentData = timePeriodData[activePeriod];
 
   const totalImpressions = currentData.impressions.reduce((a, b) => a + b, 0);
@@ -353,7 +343,7 @@ const MacBrowser = () => {
               dashboard.theviroai.com
             </div>
             <div className="ml-4 flex space-x-2">
-              {(["1D", "1W", "1M", "3M"] as const).map((period) => (
+              {(["1D", "1W", "1M"] as const).map((period) => (
                 <button
                   key={period}
                   onClick={() => setActivePeriod(period)}

@@ -19,7 +19,7 @@ const pricingPlans = [
     price: "$29",
     billing: "per month",
     features: [
-      "19 videos per month",
+      "20 videos per month",
       "1080p resolution",
       "Add Logo/Branding",
       "No watermark",
@@ -34,12 +34,14 @@ const pricingPlans = [
     price: "$59",
     billing: "per month",
     features: [
-      "39 videos per month",
+      "40 videos per month",
+      "1080p resolution",
+      "Add Logo/Branding",
       "Full Branding Kit",
       "Edit Specific Scenes",
       "No watermark",
       "AI Agents included",
-      "Basic analytics",
+      "Advanced analytics",
     ],
     highlight: true,
     badge: "Most Popular",
@@ -49,12 +51,16 @@ const pricingPlans = [
     description: "Advanced needs with premium support",
     price: "Custom",
     features: [
-      "Unlimited videos",
-      "Advanced analytics",
-      "Priority Support",
+      "Custom Video Production",
+      "1080p resolution",
+      "Add Logo/Branding",
       "Full Branding Kit",
       "Edit Specific Scenes",
+      "No watermark",
+      "AI Agents included",
+      "Advanced analytics",
       "Dedicated Account Manager",
+      "Priority Support",
     ],
     highlight: false,
   },
@@ -96,8 +102,8 @@ const Pricing = () => {
                   </span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
-                  <div className="bg-purple-500/20 p-1.5 rounded-full">
-                    <Check className="h-4 w-4 text-purple-400" />
+                  <div className="bg-green-500/20 p-1.5 rounded-full">
+                    <Check className="h-4 w-4 text-green-400" />
                   </div>
                   <span className="text-muted-foreground">
                     Full-refund guarantee
