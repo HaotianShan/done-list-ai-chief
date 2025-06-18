@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { FaChartLine, FaRobot, FaHashtag } from "react-icons/fa";
 import { motion, useAnimation, useInView } from "framer-motion";
 import { useScrollContext } from "@/lib/scroll-context";
@@ -68,7 +68,10 @@ const VideoDemo: React.FC = () => {
       ref={containerRef}
       className="w-full min-h-screen flex flex-col items-center justify-center py-24 md:py-36 px-0 overflow-hidden"
       style={{
-        background: "radial-gradient(ellipse at top, #111827, #000000)",
+        background: `
+    radial-gradient(ellipse 100% 40% at top, #111827, #000000),
+    #000000
+  `,
       }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

@@ -26,42 +26,58 @@ ChartJS.register(
 const timePeriodData = {
   "1D": {
     labels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
-    impressions: Array.from(
+    impressions: [
+      142, 98, 76, 68, 85, 210, 580, 1250, 1980, 2450, 3120, 3850, 4200, 3950,
+      3700, 3450, 4120, 5320, 6150, 5870, 4620, 3210, 1850, 980,
+    ],
+    clicks: [
+      8, 5, 4, 3, 6, 24, 85, 210, 345, 420, 580, 720, 795, 760, 690, 620, 780,
+      980, 1240, 1150, 860, 590, 320, 145,
+    ],
+    engagements: [
+      3, 2, 1, 1, 2, 8, 28, 70, 115, 140, 195, 240, 265, 255, 230, 205, 260,
+      325, 415, 385, 285, 195, 105, 48,
+    ],
+    viewRate: Array.from(
       { length: 24 },
-      (_, i) => 300 + Math.floor(Math.sin(i / 2.5) * 300 + Math.random() * 200)
+      (_, i) => (4.2 + Math.sin(i / 3) * 0.8).toFixed(1) + "%"
     ),
-    clicks: Array.from(
+    ctr: Array.from(
       { length: 24 },
-      (_, i) => 80 + Math.floor(Math.cos(i / 3) * 80 + Math.random() * 40)
-    ),
-    engagements: Array.from(
-      { length: 24 },
-      (_, i) => 30 + Math.floor(Math.sin(i / 4) * 30 + Math.random() * 20)
+      (_, i) => (1.8 + Math.cos(i / 4) * 0.5).toFixed(1) + "%"
     ),
   },
   "1W": {
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    impressions: [1500, 2200, 3500, 4200, 2800, 1800, 2500],
-    clicks: [320, 500, 800, 950, 600, 400, 550],
-    engagements: [160, 250, 400, 475, 300, 200, 275],
+    impressions: [18500, 19200, 20100, 19800, 18900, 12400, 9800],
+    clicks: [740, 790, 845, 830, 775, 495, 385],
+    engagements: [295, 315, 340, 330, 310, 195, 150],
+    completionRate: ["78%", "79%", "81%", "80%", "78%", "72%", "70%"],
+    dropOffRate: ["22%", "21%", "19%", "20%", "22%", "28%", "30%"],
   },
   "1M": {
     labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
-    impressions: [8000, 9500, 12000, 10500],
-    clicks: [1600, 1900, 2400, 2100],
-    engagements: [800, 950, 1200, 1050],
+    impressions: [68200, 73500, 81500, 89200],
+    clicks: [2720, 2940, 3260, 3570],
+    engagements: [1088, 1176, 1304, 1428],
+    avgViewDuration: ["0:42", "0:45", "0:47", "0:49"],
+    conversionRate: ["2.1%", "2.3%", "2.4%", "2.6%"],
   },
   "3M": {
     labels: ["Month 1", "Month 2", "Month 3"],
-    impressions: [32000, 45000, 38000],
-    clicks: [6400, 9000, 7600],
-    engagements: [3200, 4500, 3800],
+    impressions: [245000, 312000, 285000],
+    clicks: [9800, 12480, 11400],
+    engagements: [3920, 4992, 4560],
+    cpa: [24.5, 22.8, 25.3],
+    roas: [3.2, 3.8, 3.5],
   },
   "1Y": {
     labels: ["Q1", "Q2", "Q3", "Q4"],
-    impressions: [90000, 120000, 110000, 140000],
-    clicks: [18000, 24000, 22000, 28000],
-    engagements: [9000, 12000, 11000, 14000],
+    impressions: [865000, 792000, 823000, 1280000],
+    clicks: [34600, 31680, 32920, 51200],
+    engagements: [13840, 12672, 13168, 20480],
+    videoCompletion: ["75%", "72%", "74%", "82%"],
+    audienceRetention: ["62%", "60%", "61%", "68%"],
   },
 };
 
@@ -93,16 +109,12 @@ const AnimatedCounter = ({
       ? `${value.toFixed(1)}%`
       : Math.round(value).toLocaleString();
 
-    // Start with empty string instead of "0" placeholders
     setDisplayedValue("");
 
     const chars = valueStr.split("");
 
     chars.forEach((char, index) => {
-      const target = parseInt(char) || 0;
       const isDigit = !isNaN(parseInt(char));
-
-      // Start animation for this digit after the delay
       const timeoutId = setTimeout(() => {
         let intervalCount = 0;
         const intervalDuration = 80;
@@ -112,7 +124,6 @@ const AnimatedCounter = ({
           setDisplayedValue((prev) => {
             const newChars = prev.split("");
 
-            // Pad with empty strings if needed
             while (newChars.length <= index) {
               newChars.push("");
             }
@@ -172,14 +183,12 @@ const MacBrowser = () => {
   >("1D");
   const currentData = timePeriodData[activePeriod];
 
-  // Calculate metrics
   const totalImpressions = currentData.impressions.reduce((a, b) => a + b, 0);
   const totalClicks = currentData.clicks.reduce((a, b) => a + b, 0);
   const totalEngagements = currentData.engagements.reduce((a, b) => a + b, 0);
   const ctr = (totalClicks / totalImpressions) * 100;
   const engagementRate = (totalEngagements / totalImpressions) * 100;
 
-  // For intersection observer
   const [metricsRef, metricsInView] = useInView({
     triggerOnce: true,
     threshold: 0.5,
@@ -242,7 +251,7 @@ const MacBrowser = () => {
     },
     plugins: {
       legend: {
-        display: false, // We'll use custom legend
+        display: false,
       },
       title: {
         display: true,

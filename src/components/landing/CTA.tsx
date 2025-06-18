@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { joinWaitlist } from "@/services/waitlist";
-import { Loader2, Lock } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 const CTA = () => {
   const [email, setEmail] = useState("");
@@ -50,7 +50,10 @@ const CTA = () => {
   };
 
   return (
-    <section className="py-28 px-4 relative overflow-hidden" id="waitlist">
+    <section
+      className="py-28 px-4 relative overflow-hidden bg-[rgba(0,0,0)]"
+      id="waitlist"
+    >
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-transparent to-primary/5"></div>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-[500px] bg-primary/10 rounded-full blur-[100px] opacity-20"></div>

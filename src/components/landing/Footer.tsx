@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-sm text-muted-foreground">
-            ©{currentYear} Viro AI. All rights reserved.
+            © {currentYear} Viro AI. All rights reserved.
           </div>
         </div>
       </div>

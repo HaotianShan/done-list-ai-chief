@@ -1,4 +1,3 @@
-import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -69,7 +68,7 @@ const Pricing = () => {
   return (
     <section
       id="pricing"
-      className="py-20 px-4 relative overflow-hidden border-t border-gray-800"
+      className="py-20 px-4 relative overflow-hidden bg-[rgba(0,0,0)]"
     >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">

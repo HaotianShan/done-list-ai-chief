@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Mail } from "lucide-react"; // Changed from Sparkles to Mail
+import { useState } from "react";
 import { useScrollContext } from "@/lib/scroll-context";
 
 const Header = () => {
@@ -11,11 +11,7 @@ const Header = () => {
     e.preventDefault();
     const targetId = e.currentTarget.getAttribute("href") || "";
     const element = document.querySelector(targetId);
-
-    // Disable autoscroll globally
     setDisableAutoScroll(true);
-
-    // Scroll to section
     element?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -63,17 +59,17 @@ const Header = () => {
         </nav>
 
         <Button
+          asChild
           variant="outline"
-          className="flex items-center space-x-2 px-4 py-2 rounded-full border bg-[#201c1c] border-[#201c1c] text-gray-400 hover:bg-[#282424] hover:text-gray-40"
-          onClick={() => {
-            setDisableAutoScroll(true);
-            document
-              .getElementById("waitlist")
-              ?.scrollIntoView({ behavior: "smooth" });
-          }}
+          className="flex items-center space-x-1 px-3 py-2 rounded-full border bg-[#201c1c] border-[#201c1c] text-gray-400 hover:bg-[#282424] hover:text-gray-40"
         >
-          <Sparkles className="w-4 h-4" />
-          <span>Join Waitlist</span>
+          <a
+            href="mailto:service.viro@outlook.com"
+            onClick={() => setDisableAutoScroll(true)}
+          >
+            <Mail className="w-4 h-4" />
+            <span>Contact Us</span>
+          </a>
         </Button>
       </div>
     </header>
